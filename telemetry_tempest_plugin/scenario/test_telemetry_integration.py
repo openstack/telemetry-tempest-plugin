@@ -19,7 +19,7 @@ from gabbi import utils
 from tempest import config
 from tempest.scenario import manager
 
-TEST_DIR = os.path.join(os.path.dirname(__file__), '..', '..',
+TEST_DIR = os.path.join(os.path.dirname(__file__), '..',
                         'integration', 'gabbi', 'gabbits-live')
 
 

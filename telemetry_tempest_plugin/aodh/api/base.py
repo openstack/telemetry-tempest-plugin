@@ -15,7 +15,7 @@ from tempest.lib.common.utils import data_utils
 from tempest.lib import exceptions as lib_exc
 import tempest.test
 
-from ceilometer.tests.tempest.aodh.service import client
+from telemetry_tempest_plugin.aodh.service import client
 
 CONF = config.CONF
 

@@ -14,7 +14,7 @@ from tempest.lib.common.utils import data_utils
 from tempest.lib import decorators
 from tempest.lib import exceptions as lib_exc
 
-from ceilometer.tests.tempest.aodh.api import base
+from telemetry_tempest_plugin.aodh.api import base
 
 
 class TelemetryAlarmingAPITest(base.BaseAlarmingTest):
