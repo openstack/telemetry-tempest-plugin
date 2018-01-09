@@ -1,0 +1,3 @@
+GITREPO["telemetry-tempest-plugin"]=${TELEMETRY_TEMPEST_REPO:-${GIT_BASE}/openstack/telemetry-tempest-plugin.git}
+GITDIR["telemetry-tempest-plugin"]=$DEST/telemetry-tempest-plugin
+GITBRANCH["telemetry-tempest-plugin"]=master
