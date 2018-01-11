@@ -27,6 +27,10 @@ service_option = [cfg.BoolOpt('ceilometer',
                   cfg.BoolOpt("aodh_plugin",
                               default=True,
                               help="Whether or not Aodh is expected to be"
+                                   "available"),
+                  cfg.BoolOpt('gnocchi',
+                              default=True,
+                              help="Whether or not Gnocchi is expected to be"
                                    "available")]
 
 telemetry_group = cfg.OptGroup(name='telemetry',
@@ -37,6 +41,9 @@ event_group = cfg.OptGroup(name='event',
 
 alarming_group = cfg.OptGroup(name='alarming_plugin',
                               title='Alarming Service Options')
+
+metric_group = cfg.OptGroup(name='metric',
+                            title='Metric Service Options')
 
 TelemetryGroup = [
     cfg.IntOpt('notification_wait',
@@ -74,4 +81,15 @@ AlarmingGroup = [
                choices=['public', 'admin', 'internal',
                         'publicURL', 'adminURL', 'internalURL'],
                help="The endpoint type to use for the alarming service."),
+]
+
+metric_opts = [
+    cfg.StrOpt('catalog_type',
+               default='metric',
+               help="Catalog type of the Metric service."),
+    cfg.StrOpt('endpoint_type',
+               default='publicURL',
+               choices=['public', 'admin', 'internal',
+                        'publicURL', 'adminURL', 'internalURL'],
+               help="The endpoint type to use for the metric service."),
 ]
