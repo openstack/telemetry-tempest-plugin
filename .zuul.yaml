@@ -1,5 +1,5 @@
 - job:
-    name: telemetry-dsvm-integration-tempest-plugin
+    name: telemetry-dsvm-integration
     parent: legacy-dsvm-base
     run: playbooks/legacy/telemetry-dsvm-integration-tempest-plugin/run.yaml
     post-run: playbooks/legacy/telemetry-dsvm-integration-tempest-plugin/post.yaml
@@ -19,7 +19,7 @@
     name: openstack/telemetry-tempest-plugin
     check:
       jobs:
-        - telemetry-dsvm-integration-tempest-plugin
+        - telemetry-dsvm-integration
     gate:
       jobs:
-        - telemetry-dsvm-integration-tempest-plugin
+        - telemetry-dsvm-integration
