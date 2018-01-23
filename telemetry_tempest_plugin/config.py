@@ -24,10 +24,13 @@ service_option = [cfg.BoolOpt('ceilometer',
                               default=True,
                               help="Whether or not Panko is expected to be"
                                    "available"),
-                  cfg.BoolOpt("aodh_plugin",
+                  cfg.BoolOpt("aodh",
                               default=True,
                               help="Whether or not Aodh is expected to be"
-                                   "available"),
+                                   "available",
+                              deprecated_opts=[cfg.DeprecatedOpt(
+                                  'aodh_plugin',
+                                  group='service_available')]),
                   cfg.BoolOpt('gnocchi',
                               default=True,
                               help="Whether or not Gnocchi is expected to be"
