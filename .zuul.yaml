@@ -16,7 +16,6 @@
       - openstack/diskimage-builder
 
 - project:
-    name: openstack/telemetry-tempest-plugin
     check:
       jobs:
         - telemetry-dsvm-integration
