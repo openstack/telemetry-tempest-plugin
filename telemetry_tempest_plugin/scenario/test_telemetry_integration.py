@@ -102,7 +102,7 @@ class TestTelemetryIntegration(manager.ScenarioTest):
                 test_base_name="gabbi",
                 suite_dict=utils.load_yaml(f),
                 test_directory=TEST_DIR,
-                host=None, port=None,
+                host="example.com", port=None,
                 fixture_module=None,
                 intercept=None,
                 handlers=runner.initialize_handlers([]),
