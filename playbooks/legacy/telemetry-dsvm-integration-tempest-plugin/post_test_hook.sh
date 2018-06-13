@@ -83,6 +83,9 @@ function generate_reports_and_maybe_exit() {
 sudo chown -R tempest:stack $BASE/new/tempest
 sudo chown -R tempest:stack $BASE/data/tempest
 cd $BASE/new/tempest
+sudo -H -u tempest tox -evenv-tempest -- pip install /opt/stack/new/heat-tempest-plugin /opt/stack/new/telemetry-tempest-plugin
+echo "Checking installed Tempest plugins:"
+sudo -H -u tempest tox -evenv-tempest -- tempest list-plugins
 set +e
 sudo -H -u tempest OS_TEST_TIMEOUT=$TEMPEST_OS_TEST_TIMEOUT tox -evenv-tempest -- tempest run -r telemetry_tempest_plugin --concurrency=$TEMPEST_CONCURRENCY
 EXIT_CODE=$?
