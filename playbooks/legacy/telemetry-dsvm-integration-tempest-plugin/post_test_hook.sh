@@ -46,11 +46,11 @@ function generate_telemetry_report(){
     echo "* Event list:"
     ceilometer event-list -q 'event_type=string::compute.instance.create.end'
     echo "* Nova instance list:"
-    openstack server list
+    openstack server list --all-projects
 
     echo "* Gnocchi instance list:"
     gnocchi resource list -t instance
-    for instance_id in $(openstack server list -f value -c ID); do
+    for instance_id in $(openstack server list -f value -c ID --all-projects); do
         echo "* Nova instance detail:"
         openstack server show $instance_id
         echo "* Gnocchi instance detail:"
