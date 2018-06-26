@@ -25,7 +25,7 @@ import tempest.test
 CONF = config.CONF
 
 TEST_DIR = os.path.join(os.path.dirname(__file__), '..',
-                        'gnocchi', 'functional_live', 'gabbits')
+                        'functional_live', 'gabbits')
 
 
 class GnocchiGabbiTest(tempest.test.BaseTestCase):
