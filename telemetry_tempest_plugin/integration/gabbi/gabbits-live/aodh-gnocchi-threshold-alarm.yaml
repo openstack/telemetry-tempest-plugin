@@ -218,6 +218,15 @@ tests:
       response_strings:
           - "ok"
 
+    - name: get alarm state for 'gabbi-gnocchi-threshold-resource-alarm'
+      desc: get state for alarm
+      GET: $URL
+      request_headers:
+          content-type: application/json
+      status: 200
+      response_strings:
+          - "ok"
+
     - name: search 'gabbi-gnocchi-threshold-resource-alarm' alarm exist
       desc: search for alarm using user_id, project_id, alarm_name
       GET: $ENVIRON['AODH_SERVICE_URL']/v2/alarms
@@ -251,15 +260,6 @@ tests:
           $.gnocchi_resources_threshold_rule.metric: "radosgw.objects.size"
           $.gnocchi_resources_threshold_rule.resource_type: "ceph_account"
           $.user_id: c8ecb587-d38c-426f-a58d-22b8d4a9a1d3
-
-    - name: get alarm state for 'gabbi-gnocchi-threshold-resource-alarm'
-      desc: get state for alarm
-      GET: $ENVIRON['AODH_SERVICE_URL']/v2/alarms/$RESPONSE['$.alarm_id']/state
-      request_headers:
-          content-type: application/json
-      status: 200
-      response_strings:
-          - "ok"
 
     #
     # Teardown
