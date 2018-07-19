@@ -60,8 +60,16 @@ TelemetryGroup = [
     cfg.IntOpt('alarm_granularity',
                default=300,
                help="Granularity to use for aodh alarms. This must match the "
-                    "configured Gnocchi archive policy")
-
+                    "configured Gnocchi archive policy"),
+    cfg.StrOpt('alarm_metric_name',
+               default="cpu_util",
+               help="Name of the metric to create an alarm on."),
+    cfg.StrOpt('alarm_aggregation_method',
+               default="mean",
+               help="Aggregation method to use for alarm."),
+    cfg.IntOpt('alarm_threshold',
+               default=10,
+               help="Threshold to cross for the alarm to trigger."),
 ]
 
 event_opts = [
