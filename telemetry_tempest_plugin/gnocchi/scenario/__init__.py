@@ -43,7 +43,8 @@ class GnocchiGabbiTest(tempest.test.BaseTestCase):
         token = self.os_admin.auth_provider.get_token()
         url = self.os_admin.auth_provider.base_url(
             {'service': CONF.metric.catalog_type,
-             'endpoint_type': CONF.metric.endpoint_type})
+             'endpoint_type': CONF.metric.endpoint_type,
+             'region': CONF.identity.region})
 
         parsed_url = urlparse.urlsplit(url)
         prefix = parsed_url.path.rstrip('/')  # turn it into a prefix
