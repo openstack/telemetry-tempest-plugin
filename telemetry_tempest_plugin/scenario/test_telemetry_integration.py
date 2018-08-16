@@ -31,7 +31,7 @@ class TestTelemetryIntegration(manager.ScenarioTest):
     @classmethod
     def skip_checks(cls):
         super(TestTelemetryIntegration, cls).skip_checks()
-        for name in ["aodh_plugin", "gnocchi", "nova", "heat_plugin",
+        for name in ["aodh", "gnocchi", "nova", "heat_plugin",
                      "panko", "ceilometer", "glance"]:
             cls._check_service(name)
 
