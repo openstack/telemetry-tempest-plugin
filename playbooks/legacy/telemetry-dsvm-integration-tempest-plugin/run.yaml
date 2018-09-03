@@ -35,7 +35,7 @@
           export DEVSTACK_GATE_EXERCISES=0
           export DEVSTACK_GATE_INSTALL_TESTONLY=1
           export DEVSTACK_GATE_TEMPEST_NOTESTS=1
-          export PROJECTS="openstack/ceilometer openstack/aodh openstack/panko openstack/telemetry-tempest-plugin openstack/heat openstack/heat-tempest-plugin"
+          export PROJECTS="openstack/ceilometer openstack/aodh openstack/panko openstack/telemetry-tempest-plugin openstack/heat"
           export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin panko git://git.openstack.org/openstack/panko"
           export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin ceilometer git://git.openstack.org/openstack/ceilometer"
           export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin aodh git://git.openstack.org/openstack/aodh"

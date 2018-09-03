@@ -27,7 +27,7 @@ tests:
     #
 
     - name: create new resource type 'instance-like'
-      POST: /v1/resource_type
+      POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource_type
       status: 201
       request_headers:
           content-type: application/json
@@ -51,7 +51,7 @@ tests:
                   required: False
 
     - name: create new resource type 'image-like'
-      POST: /v1/resource_type
+      POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource_type
       status: 201
       request_headers:
           content-type: application/json
@@ -72,7 +72,7 @@ tests:
     # Setup test resources
     #
     - name: helper. create instance-like resource-1
-      POST: /v1/resource/instance-like
+      POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource/instance-like
       request_headers:
           content-type: application/json
       data:
@@ -86,7 +86,7 @@ tests:
       status: 201
 
     - name: helper. create instance-like resource-2
-      POST: /v1/resource/instance-like
+      POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource/instance-like
       request_headers:
           content-type: application/json
       data:
@@ -100,7 +100,7 @@ tests:
       status: 201
 
     - name: helper. create instance-like resource-3
-      POST: /v1/resource/instance-like
+      POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource/instance-like
       request_headers:
           content-type: application/json
       data:
@@ -114,7 +114,7 @@ tests:
       status: 201
 
     - name: helper. create image-like resource-1
-      POST: /v1/resource/image-like
+      POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource/image-like
       request_headers:
           content-type: application/json
       data:
@@ -132,7 +132,7 @@ tests:
 
     - name: search for all resources with a specific user_id
       desc: search through all resource types
-      POST: /v1/search/resource/generic
+      POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/search/resource/generic
       request_headers:
           content-type: application/json
       data:
@@ -149,7 +149,7 @@ tests:
 
     - name: search for all resources of instance-like type create by specific user_id
       desc: all instances created by a specified user
-      POST: /v1/search/resource/generic
+      POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/search/resource/generic
       request_headers:
           content-type: application/json
       data:
@@ -174,7 +174,7 @@ tests:
 
     - name: search for all resources with a specific project_id
       desc: search for all resources in a specific project
-      POST: /v1/search/resource/generic
+      POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/search/resource/generic
       request_headers:
           content-type: application/json
       data:
@@ -186,7 +186,7 @@ tests:
 
     - name: search for intances on a specific compute using "like" keyword
       desc: search for vms hosted on a specific compute node
-      POST: /v1/search/resource/instance-like
+      POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/search/resource/instance-like
       request_headers:
           content-type: application/json
       data:
@@ -204,7 +204,7 @@ tests:
 
     - name: search for instances using complex search with "like" keyword and user_id
       desc: search for vms of specified user hosted on a specific compute node
-      POST: /v1/search/resource/instance-like
+      POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/search/resource/instance-like
       request_headers:
           content-type: application/json
       data:
@@ -222,7 +222,7 @@ tests:
 
     - name: search for resources of instance-like or image-like type with specific user_id
       desc: search for all image-like or instance-like resources created by a specific user
-      POST: /v1/search/resource/generic
+      POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/search/resource/generic
       request_headers:
           content-type: application/json
       data:
@@ -250,26 +250,26 @@ tests:
     #
 
     - name: helper. delete instance-like resource-1
-      DELETE: /v1/resource/instance-like/a64ca14f-bc7c-45b0-aa85-42cd2179e1e2
+      DELETE: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource/instance-like/a64ca14f-bc7c-45b0-aa85-42cd2179e1e2
       status: 204
 
     - name: helper. delete instance-like resource-2
-      DELETE: /v1/resource/instance-like/7ccccfa0-92ce-4225-80ca-3ac9cb122d6a
+      DELETE: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource/instance-like/7ccccfa0-92ce-4225-80ca-3ac9cb122d6a
       status: 204
 
     - name: helper. delete instance-like resource-3
-      DELETE: /v1/resource/instance-like/c442a47c-eb33-46ce-9665-f3aa0bef54e7
+      DELETE: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource/instance-like/c442a47c-eb33-46ce-9665-f3aa0bef54e7
       status: 204
 
     - name: helper. delete image-like resource
-      DELETE: /v1/resource/image-like/7ab2f7ae-7af5-4469-bdc8-3c0f6dfab75d
+      DELETE: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource/image-like/7ab2f7ae-7af5-4469-bdc8-3c0f6dfab75d
       status: 204
 
     - name: helper. delete resource-type instance-like
-      DELETE: /v1/resource_type/instance-like
+      DELETE: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource_type/instance-like
       status: 204
 
     - name: helper. delete resource-type image-like
-      DELETE: /v1/resource_type/image-like
+      DELETE: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource_type/image-like
       status: 204
 

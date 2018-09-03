@@ -11,16 +11,14 @@
 #    under the License.
 
 import os
-import unittest
 
-from gabbi import runner
-from gabbi import suitemaker
-from gabbi import utils
 from tempest import config
 from tempest.scenario import manager
 
-TEST_DIR = os.path.join(os.path.dirname(__file__), '..',
-                        'integration', 'gabbi', 'gabbits-live')
+from telemetry_tempest_plugin.scenario import utils
+
+TEST_DIR = os.path.join(os.path.dirname(__file__),
+                        'telemetry_integration_gabbits')
 
 
 class TestTelemetryIntegration(manager.ScenarioTest):
@@ -75,7 +73,7 @@ class TestTelemetryIntegration(manager.ScenarioTest):
                                 opt_section.catalog_type)
             return endpoints[0]['endpoints'][0][endpoint_type]
 
-    def _do_test(self, filename):
+    def _prep_test(self, filename):
         admin_auth = self.os_admin.auth_provider.get_auth()
         auth = self.os_primary.auth_provider.get_auth()
         networks = self.os_primary.networks_client.list_networks(
@@ -96,48 +94,5 @@ class TestTelemetryIntegration(manager.ScenarioTest):
             "NEUTRON_NETWORK": networks[0].get('id'),
         })
 
-        with open(os.path.join(TEST_DIR, filename)) as f:
-            test_suite = suitemaker.test_suite_from_dict(
-                loader=unittest.defaultTestLoader,
-                test_base_name="gabbi",
-                suite_dict=utils.load_yaml(f),
-                test_directory=TEST_DIR,
-                host="example.com", port=None,
-                fixture_module=None,
-                intercept=None,
-                handlers=runner.initialize_handlers([]),
-                test_loader_name="tempest")
 
-            # NOTE(sileht): We hide stdout/stderr and reraise the failure
-            # manually, tempest will print it itself.
-            with open(os.devnull, 'w') as stream:
-                result = unittest.TextTestRunner(
-                    stream=stream, verbosity=0, failfast=True,
-                ).run(test_suite)
-
-            if not result.wasSuccessful():
-                failures = (result.errors + result.failures +
-                            result.unexpectedSuccesses)
-                if failures:
-                    test, bt = failures[0]
-                    name = test.test_data.get('name', test.id())
-                    msg = 'From test "%s" :\n%s' % (name, bt)
-                    self.fail(msg)
-
-            self.assertTrue(result.wasSuccessful())
-
-
-def test_maker(name, filename):
-    def test(self):
-        self._do_test(filename)
-        test.__name__ = name
-    return test
-
-
-# Create one scenario per yaml file
-for filename in os.listdir(TEST_DIR):
-    if not filename.endswith('.yaml'):
-        continue
-    name = "test_%s" % filename[:-5].lower().replace("-", "_")
-    setattr(TestTelemetryIntegration, name,
-            test_maker(name, filename))
+utils.generate_tests(TestTelemetryIntegration, TEST_DIR)

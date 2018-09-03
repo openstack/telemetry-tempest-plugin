@@ -43,8 +43,6 @@ function generate_telemetry_report(){
     openstack stack show integration_test
     echo "* Alarm list:"
     aodh alarm list
-    echo "* Event list:"
-    ceilometer event-list -q 'event_type=string::compute.instance.create.end'
     echo "* Nova instance list:"
     openstack server list --all-projects
 
@@ -63,6 +61,16 @@ function generate_telemetry_report(){
 
     echo "* Unprocessed measures:"
     for key in $(redis-cli --scan --pattern 'incoming*'); do echo -n "$key length = " && redis-cli llen $key; done
+
+    echo "* locale:"
+    locale
+    echo
+    echo "* tempest locale:"
+    sudo -H -u tempest locale
+    echo
+    echo "* tempest tox locale:"
+    sudo -H -u tempest tox -evenv-tempest -- locale
+    echo
 
     set -e
     set -x
@@ -83,14 +91,14 @@ function generate_reports_and_maybe_exit() {
 sudo chown -R tempest:stack $BASE/new/tempest
 sudo chown -R tempest:stack $BASE/data/tempest
 cd $BASE/new/tempest
-sudo -H -u tempest tox -evenv-tempest -- pip install /opt/stack/new/heat-tempest-plugin /opt/stack/new/telemetry-tempest-plugin
+sudo -H -u tempest tox -evenv-tempest -- pip install /opt/stack/new/telemetry-tempest-plugin
 echo "Checking installed Tempest plugins:"
 sudo -H -u tempest tox -evenv-tempest -- tempest list-plugins
 set +e
 sudo -H -u tempest OS_TEST_TIMEOUT=$TEMPEST_OS_TEST_TIMEOUT tox -evenv-tempest -- tempest run -r telemetry_tempest_plugin --concurrency=$TEMPEST_CONCURRENCY
 EXIT_CODE=$?
 set -e
-export_subunit_data "all-plugin"
+export_subunit_data "venv-tempest"
 generate_reports_and_maybe_exit $EXIT_CODE
 
 exit $EXIT_CODE
