@@ -55,6 +55,8 @@ function generate_telemetry_report(){
         gnocchi resource show -t instance $instance_id
         echo "* Gnocchi measures for instance ${instance_id}:"
         gnocchi measures show -r $instance_id cpu_util
+        gnocchi metric show -r $instance_id cpu
+        gnocchi --debug measures show -r $instance_id --aggregation rate:mean cpu
     done
 
     gnocchi status

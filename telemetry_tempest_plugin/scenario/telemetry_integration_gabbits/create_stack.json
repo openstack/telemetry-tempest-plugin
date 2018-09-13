@@ -42,11 +42,11 @@
                 "type": "OS::Ceilometer::GnocchiAggregationByResourcesAlarm",
                 "properties": {
                     "description": "Scale-up if the mean CPU > 10% on 1 minute",
-                    "metric": "cpu_util",
-                    "aggregation_method": "mean",
+                    "metric": "$ENVIRON["CEILOMETER_METRIC_NAME"]",
+                    "aggregation_method": "$ENVIRON["GNOCCHI_AGGREGATION_METHOD"]",
                     "granularity": $ENVIRON["AODH_GRANULARITY"],
                     "evaluation_periods": 1,
-                    "threshold": 10,
+                    "threshold": $ENVIRON["AODH_THRESHOLD"],
                     "comparison_operator": "gt",
                     "alarm_actions": [
                         {

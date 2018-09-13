@@ -82,6 +82,11 @@ class TestTelemetryIntegration(manager.ScenarioTest):
         os.environ.update({
             "ADMIN_TOKEN": admin_auth[0],
             "USER_TOKEN": auth[0],
+            "CEILOMETER_METRIC_NAME":
+            config.CONF.telemetry.alarm_metric_name,
+            "GNOCCHI_AGGREGATION_METHOD":
+            config.CONF.telemetry.alarm_aggregation_method,
+            "AODH_THRESHOLD": str(config.CONF.telemetry.alarm_threshold),
             "AODH_GRANULARITY": str(config.CONF.telemetry.alarm_granularity),
             "AODH_SERVICE_URL": self._get_endpoint(auth, "alarming_plugin"),
             "GNOCCHI_SERVICE_URL": self._get_endpoint(auth, "metric"),
