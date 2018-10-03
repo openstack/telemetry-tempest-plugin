@@ -17,9 +17,13 @@
       - openstack/diskimage-builder
 
 - project:
+    templates:
+      - check-requirements
+      - tempest-plugin-jobs
     check:
       jobs:
         - telemetry-dsvm-integration
     gate:
+      queue: telemetry
       jobs:
         - telemetry-dsvm-integration
