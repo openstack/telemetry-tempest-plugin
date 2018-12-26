@@ -29,7 +29,7 @@ class AlarmingClient(rest_client.RestClient):
     uri_prefix = "v2"
 
     def deserialize(self, body):
-        return json.loads(body.replace("\n", ""))
+        return json.loads(body.decode('utf-8').replace("\n", ""))
 
     def serialize(self, body):
         return json.dumps(body)
