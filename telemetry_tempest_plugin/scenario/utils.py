@@ -43,8 +43,6 @@ def run_test(test_class_instance, test_dir, filename):
             stream=stream, verbosity=0, failfast=True,
         ).run(test_suite)
 
-    return
-
     if not result.wasSuccessful():
         failures = (result.errors + result.failures +
                     result.unexpectedSuccesses)

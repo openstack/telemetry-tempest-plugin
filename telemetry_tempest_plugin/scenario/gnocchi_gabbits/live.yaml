@@ -51,7 +51,7 @@ tests:
           cowsay: moo
       status: 400
       response_strings:
-          - "Invalid input: extra keys not allowed"
+          - "extra keys not allowed"
 
     - name: missing definition
       desc: archive policy is missing 'definition' keyword
@@ -62,7 +62,7 @@ tests:
           name: medium
       status: 400
       response_strings:
-          - "Invalid input: required key not provided"
+          - "required key not provided"
 
     - name: empty definition
       desc: empty definition for archive policy
@@ -74,7 +74,7 @@ tests:
           definition: []
       status: 400
       response_strings:
-          - "Invalid input: length of value must be at least 1"
+          - "length of value must be at least 1"
 
     - name: wrong value definition
       desc: invalid type of 'definition' key
@@ -86,7 +86,7 @@ tests:
           definition: foobar
       status: 400
       response_strings:
-          - "Invalid input: expected a list"
+          - "expected a list"
 
     - name: useless definition
       desc: invalid archive policy definition
@@ -99,7 +99,7 @@ tests:
               - cowsay: moo
       status: 400
       response_strings:
-          - "Invalid input: extra keys not allowed"
+          - "extra keys not allowed"
 
     #
     # Create archive policy
@@ -125,7 +125,7 @@ tests:
               - min
               - max
       response_headers:
-          location: $SCHEME://$NETLOC/v1/archive_policy/gabbilive
+          location: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/archive_policy/gabbilive
       status: 201
 
     # Retrieve it correctly and then poorly
@@ -134,7 +134,7 @@ tests:
       desc: retrieve archive policy 'gabbilive' and asster its values
       GET: $LOCATION
       response_headers:
-          content-type: $ENVIRON['GNOCCHI_SERVICE_URL']/application/json/
+          content-type: application/json
       response_json_paths:
           $.name: gabbilive
           $.back_window: 0
@@ -198,7 +198,7 @@ tests:
                 points: 20
       status: 201
       response_headers:
-          location: $SCHEME://$NETLOC/v1/archive_policy/%E2%9C%94%C3%A9%C3%B1%E2%98%83
+          location: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/archive_policy/%E2%9C%94%C3%A9%C3%B1%E2%98%83
       response_json_paths:
           name: ✔éñ☃
 
@@ -325,7 +325,7 @@ tests:
           whaa: foobar
       status: 400
       response_strings:
-          - "Invalid input: extra keys not allowed"
+          - "extra keys not allowed"
 
     # get an archive policy rules
 
@@ -461,7 +461,7 @@ tests:
     - name: root of resource
       GET: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource
       response_json_paths:
-          $.generic: $SCHEME://$NETLOC/v1/resource/generic
+          $.generic: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource/generic
 
     - name: typo of resource
       GET: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resoue
@@ -489,7 +489,7 @@ tests:
                   min_length: 2
       status: 201
       response_headers:
-          location: $SCHEME://$NETLOC/v1/resource_type/myresource
+          location: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource_type/myresource
 
     - name: add an attribute
       PATCH: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource_type/myresource

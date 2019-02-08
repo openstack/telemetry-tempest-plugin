@@ -31,7 +31,7 @@ function generate_testr_results {
 }
 
 function generate_telemetry_report(){
-    set +x
+    set -x
     set +e
 
     echo "* Message queue status:"
@@ -54,7 +54,6 @@ function generate_telemetry_report(){
         echo "* Gnocchi instance detail:"
         gnocchi resource show -t instance $instance_id
         echo "* Gnocchi measures for instance ${instance_id}:"
-        gnocchi measures show -r $instance_id cpu_util
         gnocchi metric show -r $instance_id cpu
         gnocchi --debug measures show -r $instance_id --aggregation rate:mean cpu
     done
@@ -94,6 +93,7 @@ sudo chown -R tempest:stack $BASE/new/tempest
 sudo chown -R tempest:stack $BASE/data/tempest
 cd $BASE/new/tempest
 sudo -H -u tempest tox -evenv-tempest -- pip install /opt/stack/new/telemetry-tempest-plugin
+sudo -H -u tempest tox -evenv-tempest -- pip install /opt/stack/new/heat-tempest-plugin
 echo "Checking installed Tempest plugins:"
 sudo -H -u tempest tox -evenv-tempest -- tempest list-plugins
 set +e

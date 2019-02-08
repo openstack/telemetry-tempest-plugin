@@ -11,6 +11,7 @@
       - openstack/panko
       - openstack/telemetry-tempest-plugin
       - openstack/heat
+      - openstack/heat-tempest-plugin
       # following are required when DEVSTACK_GATE_HEAT, which this
       # job turns on
       - openstack/dib-utils

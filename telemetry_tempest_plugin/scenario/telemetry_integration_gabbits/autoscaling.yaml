@@ -99,45 +99,6 @@ tests:
       response_json_paths:
           $[0].state: alarm
 
-    - name: get stack location for update
-      desc: Get the stack location
-      url: $ENVIRON['HEAT_SERVICE_URL']/stacks/integration_test
-      method: GET
-      status: 302
-
-    - name: update stack
-      desc: Update an autoscaling stack
-      url: $LOCATION
-      method: PUT
-      request_headers:
-          content-type: application/json
-      data: <@update_stack.json
-      status: 202
-
-    - name: control stack status
-      desc: Checks the stack have been created successfully
-      url: $ENVIRON['HEAT_SERVICE_URL']/stacks/integration_test
-      redirects: true
-      method: GET
-      status: 200
-      poll:
-          count: 300
-          delay: 1
-      response_json_paths:
-          $.stack.stack_status: "UPDATE_COMPLETE"
-
-    - name: list servers shrink
-      desc: Wait the autoscaling stack shrink to one server
-      url: $ENVIRON['NOVA_SERVICE_URL']/servers/detail
-      method: GET
-      poll:
-          count: 600
-          delay: 1
-      response_json_paths:
-          $.servers[0].metadata.'metering.server_group': $RESPONSE['$.stack.id']
-          $.servers[0].status: ACTIVE
-          $.servers.`len`: 1
-
     - name: get stack location
       desc: Get the stack location
       url: $ENVIRON['HEAT_SERVICE_URL']/stacks/integration_test
