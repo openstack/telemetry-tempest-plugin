@@ -43,6 +43,8 @@ function generate_telemetry_report(){
     openstack stack show integration_test
     echo "* Alarm list:"
     aodh alarm list
+    echo "* Alarm show:"
+    aodh alarm show $(aodh alarm list -f value -c alarm_id)
     echo "* Nova instance list:"
     openstack server list --all-projects
 
@@ -54,8 +56,13 @@ function generate_telemetry_report(){
         echo "* Gnocchi instance detail:"
         gnocchi resource show -t instance $instance_id
         echo "* Gnocchi measures for instance ${instance_id}:"
-        gnocchi metric show -r $instance_id cpu
-        gnocchi --debug measures show -r $instance_id --aggregation rate:mean cpu
+        if [[ $ZUUL_BRANCH =~ (stable/ocata|stable/pike|stable/queens|stable/rocky) ]]; then
+            gnocchi metric show -r $instance_id cpu_util
+            gnocchi --debug measures show -r $instance_id --aggregation mean cpu_util
+        else
+            gnocchi metric show -r $instance_id cpu
+            gnocchi --debug measures show -r $instance_id --aggregation rate:mean cpu
+        fi
     done
 
     gnocchi status
@@ -87,11 +94,25 @@ function generate_reports_and_maybe_exit() {
     fi
 }
 
+function change_config_for_old_branch() {
+    local TEMPEST_CONFIG="$BASE/new/tempest/etc/tempest.conf"
+    if [[ $ZUUL_BRANCH =~ (stable/ocata|stable/pike|stable/queens|stable/rocky) ]]; then
+        if ! sudo grep -q "alarm_aggregation_method" "$TEMPEST_CONFIG" 2>/dev/null; then
+            sudo echo -e "alarm_aggregation_method = mean" | sudo tee --append "$TEMPEST_CONFIG" > /dev/null
+            sudo echo -e "alarm_metric_name = cpu_util" | sudo tee --append "$TEMPEST_CONFIG" > /dev/null
+        else
+            sudo sed -e "s/\(^\s*alarm_aggregation_method \s*=\).*$/\1 mean/" -i "$TEMPEST_CONFIG"
+            sudo sed -e "s/\(^\s*alarm_metric_name \s*=\).*$/\1 cpu_util/" -i "$TEMPEST_CONFIG"
+        fi
+    fi
+}
+
 
 # Run tests with tempest
 sudo chown -R tempest:stack $BASE/new/tempest
 sudo chown -R tempest:stack $BASE/data/tempest
 cd $BASE/new/tempest
+change_config_for_old_branch
 sudo -H -u tempest tox -evenv-tempest -- pip install /opt/stack/new/telemetry-tempest-plugin
 sudo -H -u tempest tox -evenv-tempest -- pip install /opt/stack/new/heat-tempest-plugin
 echo "Checking installed Tempest plugins:"

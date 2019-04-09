@@ -42,8 +42,13 @@
           export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin heat https://git.openstack.org/openstack/heat"
           export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin heat-tempest-plugin https://git.openstack.org/openstack/heat-tempest-plugin"
           export DEVSTACK_LOCAL_CONFIG+=$'\n'"INSTALL_TEMPEST='False'"
+          if [[ $ZUUL_BRANCH =~ (stable/ocata|stable/pike|stable/queens|stable/rocky) ]]; then
+              export DEVSTACK_LOCAL_CONFIG+=$'\n'"GNOCCHI_ARCHIVE_POLICY=high"
+              export DEVSTACK_LOCAL_CONFIG+=$'\n'"GNOCCHI_ARCHIVE_POLICY_TEMPEST=ceilometer-high"
+          else
+              export DEVSTACK_LOCAL_CONFIG+=$'\n'"GNOCCHI_ARCHIVE_POLICY_TEMPEST=ceilometer-high-rate"
+          fi
           export DEVSTACK_LOCAL_CONFIG+=$'\n'"CEILOMETER_BACKEND=gnocchi"
-          export DEVSTACK_LOCAL_CONFIG+=$'\n'"GNOCCHI_ARCHIVE_POLICY_TEMPEST=ceilometer-high-rate"
           export DEVSTACK_LOCAL_CONFIG+=$'\n'"CEILOMETER_PIPELINE_INTERVAL=15"
           function post_test_hook {
               cd /opt/stack/new/telemetry-tempest-plugin/playbooks/legacy/telemetry-dsvm-integration-tempest-plugin/
