@@ -1,21 +1,59 @@
 - job:
-    name: telemetry-dsvm-integration
-    parent: legacy-dsvm-base
-    run: playbooks/legacy/telemetry-dsvm-integration-tempest-plugin/run.yaml
-    post-run: playbooks/legacy/telemetry-dsvm-integration-tempest-plugin/post.yaml
+    name: telemetry-tempest-base
+    parent: devstack-tempest
+    irrelevant-files:
+      - ^(test-|)requirements.txt$
+      - ^setup.cfg$
+      - ^doc/.*$
+      - ^.*\.rst$
+      - ^releasenotes/.*$
     timeout: 7800
     required-projects:
       - openstack/devstack-gate
+      - openstack/panko
       - openstack/aodh
       - openstack/ceilometer
-      - openstack/panko
       - openstack/telemetry-tempest-plugin
-      - openstack/heat
       - openstack/heat-tempest-plugin
-      # following are required when DEVSTACK_GATE_HEAT, which this
-      # job turns on
+      - openstack/heat
       - openstack/dib-utils
       - openstack/diskimage-builder
+      - openstack/tempest
+    vars:
+      devstack_plugins:
+        heat: https://opendev.org/openstack/heat
+        ceilometer: https://opendev.org/openstack/ceilometer
+        aodh: https://opendev.org/openstack/aodh
+        panko: https://opendev.org/openstack/panko
+      devstack_services:
+        tempest: true
+        tls-proxy: false
+      devstack_localrc:
+        TEMPEST_PLUGINS: '"/opt/stack/telemetry-tempest-plugin /opt/stack/heat-tempest-plugin"'
+        GNOCCHI_ARCHIVE_POLICY_TEMPEST: "ceilometer-high-rate"
+        CEILOMETER_BACKEND: "gnocchi"
+        CEILOMETER_PIPELINE_INTERVAL: 15
+      tempest_test_regex: telemetry_tempest_plugin
+      tox_envlist: all
+
+- job:
+    name: telemetry-dsvm-integration
+    parent: telemetry-tempest-base
+    branches: ^(?!stable/(ocata|pike|queens|rocky)).*$
+
+- job:
+    name: telemetry-dsvm-integration
+    parent: telemetry-tempest-base
+    branches:
+      - stable/pike
+      - stable/queens
+      - stable/rocky
+    vars:
+      devstack_localrc:
+        GNOCCHI_ARCHIVE_POLICY_TEMPEST: "ceilometer-high"
+        GNOCCHI_ARCHIVE_POLICY: "high"
+        CEILOMETER_ALARM_AGGREGATION_METHOD: "mean"
+        CEILOMETER_ALARM_METRIC_NAME: "cpu_util"
 
 - project:
     templates:
