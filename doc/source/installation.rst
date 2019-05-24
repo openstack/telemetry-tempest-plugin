@@ -8,6 +8,6 @@ the same environment where Tempest is installed.
 
 At the command line::
 
-    $ git clone https://git.openstack.org/openstack/telemetry-tempest-plugin
+    $ git clone https://opendev.org/openstack/telemetry-tempest-plugin
     $ cd telemetry-tempest-plugin/
     $ pip install telemetry-tempest-plugin
