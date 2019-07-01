@@ -28,7 +28,7 @@ tests:
 
     - name: control stack status
       desc: Checks the stack have been created successfully
-      url: $ENVIRON['HEAT_SERVICE_URL']/stacks/integration_test
+      url: $ENVIRON['HEAT_SERVICE_URL']/stacks/$ENVIRON['STACK_NAME']
       redirects: true
       method: GET
       status: 200
@@ -99,13 +99,13 @@ tests:
           count: 30
           delay: 1
       response_strings:
-          - "integration_test-cpu_alarm_high-"
+          - "$ENVIRON['STACK_NAME']-cpu_alarm_high-"
       response_json_paths:
           $[0].state: alarm
 
     - name: get stack location
       desc: Get the stack location
-      url: $ENVIRON['HEAT_SERVICE_URL']/stacks/integration_test
+      url: $ENVIRON['HEAT_SERVICE_URL']/stacks/$ENVIRON['STACK_NAME']
       method: GET
       status: 302
 
@@ -117,7 +117,7 @@ tests:
 
     - name: get deleted stack
       desc: Check the stack have been deleted
-      url: $ENVIRON['HEAT_SERVICE_URL']/stacks/integration_test
+      url: $ENVIRON['HEAT_SERVICE_URL']/stacks/$ENVIRON['STACK_NAME']
       redirects: true
       method: GET
       poll:

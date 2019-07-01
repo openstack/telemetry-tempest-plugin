@@ -1,5 +1,5 @@
 {
-    "stack_name": "integration_test",
+    "stack_name": "$ENVIRON['STACK_NAME']",
     "template": {
         "heat_template_version": "2013-05-23",
         "description": "Integration Test AutoScaling with heat+ceilometer+gnocchi+aodh",
