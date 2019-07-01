@@ -54,14 +54,18 @@ tests:
 
     - name: check gnocchi resources
       desc: Check the gnocchi resources for this two servers exists
-      url: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource/instance
-      method: GET
+      url: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/search/resource/instance
+      method: POST
+      request_headers:
+          content-type: application/json
+      data:
+          =:
+              server_group: $RESPONSE['$.servers[0].metadata."metering.server_group"']
       poll:
           count: 30
           delay: 1
-      response_strings:
-          - '"id": "$RESPONSE["$.servers[0].id"]"'
-          - '"id": "$RESPONSE["$.servers[1].id"]"'
+      response_json_paths:
+          $.`len`: 2
 
     - name: check event
       desc: Check panko for new instance.create.end event
