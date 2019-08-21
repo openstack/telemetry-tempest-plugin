@@ -9,12 +9,14 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-
+from tempest import config
 from tempest.lib.common.utils import data_utils
 from tempest.lib import decorators
 from tempest.lib import exceptions as lib_exc
 
 from telemetry_tempest_plugin.aodh.api import base
+
+CONF = config.CONF
 
 
 class TelemetryAlarmingAPITest(base.BaseAlarmingTest):
@@ -22,14 +24,16 @@ class TelemetryAlarmingAPITest(base.BaseAlarmingTest):
     @classmethod
     def resource_setup(cls):
         super(TelemetryAlarmingAPITest, cls).resource_setup()
-        cls.rule = {'metrics': ['c0d457b6-957e-41de-a384-d5eb0957de3b'],
-                    'comparison_operator': 'gt',
-                    'aggregation_method': 'mean',
-                    'threshold': 80.0,
-                    'granularity': 70}
-        for i in range(2):
-            cls.create_alarm(
-                gnocchi_aggregation_by_metrics_threshold_rule=cls.rule)
+
+        if CONF.alarming_plugin.create_alarms:
+            cls.rule = {'metrics': ['c0d457b6-957e-41de-a384-d5eb0957de3b'],
+                        'comparison_operator': 'gt',
+                        'aggregation_method': 'mean',
+                        'threshold': 80.0,
+                        'granularity': 70}
+            for i in range(2):
+                cls.create_alarm(
+                    gnocchi_aggregation_by_metrics_threshold_rule=cls.rule)
 
     @decorators.idempotent_id('1c918e06-210b-41eb-bd45-14676dd77cd7')
     def test_alarm_list(self):

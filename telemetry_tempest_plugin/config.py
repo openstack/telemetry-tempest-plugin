@@ -92,6 +92,9 @@ AlarmingGroup = [
                choices=['public', 'admin', 'internal',
                         'publicURL', 'adminURL', 'internalURL'],
                help="The endpoint type to use for the alarming service."),
+    cfg.BoolOpt('create_alarms',
+                default=True,
+                help="If create alarms dynamically before testing."),
 ]
 
 metric_opts = [
