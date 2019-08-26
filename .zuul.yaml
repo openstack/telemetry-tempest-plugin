@@ -8,7 +8,7 @@
       - ^.*\.rst$
       - ^releasenotes/.*$
     timeout: 7800
-    required-projects:
+    required-projects: &base_required_projects
       - openstack/devstack-gate
       - openstack/panko
       - openstack/aodh
@@ -19,7 +19,7 @@
       - openstack/dib-utils
       - openstack/diskimage-builder
       - openstack/tempest
-    vars:
+    vars: &base_vars
       devstack_plugins:
         heat: https://opendev.org/openstack/heat
         ceilometer: https://opendev.org/openstack/ceilometer
@@ -55,6 +55,15 @@
         CEILOMETER_ALARM_AGGREGATION_METHOD: "mean"
         CEILOMETER_ALARM_METRIC_NAME: "cpu_util"
 
+- job:
+    name: telemetry-dsvm-integration-ipv6-only
+    parent: devstack-tempest-ipv6
+    branches: ^(?!stable/(ocata|pike|queens|rocky)).*$
+    description: |
+      Telemetry devstack tempest tests job for IPv6-only deployment
+    required-projects: *base_required_projects
+    vars: *base_vars
+
 - project:
     templates:
       - check-requirements
@@ -62,7 +71,9 @@
     check:
       jobs:
         - telemetry-dsvm-integration
+        - telemetry-dsvm-integration-ipv6-only
     gate:
       queue: telemetry
       jobs:
         - telemetry-dsvm-integration
+        - telemetry-dsvm-integration-ipv6-only
