@@ -1,6 +1,57 @@
 - job:
     name: telemetry-tempest-base
+    description: |
+      This job is for stable branch prior to Ussuri for testing
+      on py2.
     parent: devstack-tempest
+    irrelevant-files:
+      - ^(test-|)requirements.txt$
+      - ^setup.cfg$
+      - ^doc/.*$
+      - ^.*\.rst$
+      - ^releasenotes/.*$
+    timeout: 7800
+    required-projects:
+      - openstack/devstack-gate
+      - openstack/panko
+      - openstack/aodh
+      - openstack/ceilometer
+      - openstack/telemetry-tempest-plugin
+      - openstack/heat-tempest-plugin
+      - openstack/heat
+      - openstack/dib-utils
+      - openstack/diskimage-builder
+      - openstack/tempest
+    vars:
+      devstack_plugins:
+        heat: https://opendev.org/openstack/heat
+        ceilometer: https://opendev.org/openstack/ceilometer
+        aodh: https://opendev.org/openstack/aodh
+        panko: https://opendev.org/openstack/panko
+      devstack_services:
+        tempest: true
+        tls-proxy: false
+      devstack_localrc:
+        TEMPEST_PLUGINS: '"/opt/stack/telemetry-tempest-plugin /opt/stack/heat-tempest-plugin"'
+        GNOCCHI_ARCHIVE_POLICY_TEMPEST: "ceilometer-high-rate"
+        CEILOMETER_BACKEND: "gnocchi"
+        CEILOMETER_PIPELINE_INTERVAL: 15
+        USE_PYTHON3: False
+      tempest_test_regex: telemetry_tempest_plugin
+      tox_envlist: all
+    branches:
+      - stable/ocata
+      - stable/pike
+      - stable/queens
+      - stable/rocky
+      - stable/stein
+      - stable/train
+
+- job:
+    name: telemetry-tempest-base
+    parent: devstack-tempest
+    description: |
+      This job is for testing on py3 which is Ussuri onwards.
     irrelevant-files:
       - ^(test-|)requirements.txt$
       - ^setup.cfg$
