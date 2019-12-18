@@ -20,7 +20,8 @@ tests:
     - name: SETUP. create archive policy gabbiliveceph
       desc: create archve policy 'gabbiliveceph' for tests
       POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/archive_policy
-      status: 201
+      # 409 when policy with such name already exists
+      status: 201 || 409
       request_headers:
           content-type: application/json
       data:
@@ -37,8 +38,13 @@ tests:
               - mean
               - min
               - max
+
+    - name: check properties of created or existing archive policy
+      GET: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/archive_policy/gabbiliveceph
+      status: 200
+      request_headers:
+          content-type: application/json
       response_json_paths:
-          $.name: gabbiliveceph
           $.back_window: 0
           $.aggregation_methods.`len`: 3
 
