@@ -44,8 +44,8 @@ def run_test(test_class_instance, test_dir, filename):
         ).run(test_suite)
 
     if not result.wasSuccessful():
-        failures = (result.errors + result.failures +
-                    result.unexpectedSuccesses)
+        failures = (result.errors + result.failures
+                    + result.unexpectedSuccesses)
         if failures:
             test, bt = failures[0]
             name = test.test_data.get('name', test.id())

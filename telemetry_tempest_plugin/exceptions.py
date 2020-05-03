@@ -38,8 +38,8 @@ class TempestException(Exception):
             # of the exception message
             # Convert all arguments into their string representations...
             args = ["%s" % arg for arg in args]
-            self._error_string = (self._error_string +
-                                  "\nDetails: %s" % '\n'.join(args))
+            self._error_string = (self._error_string
+                                  + "\nDetails: %s" % '\n'.join(args))
 
     def __str__(self):
         return self._error_string
