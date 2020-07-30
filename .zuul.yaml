@@ -130,11 +130,13 @@
 - job:
     name: telemetry-dsvm-integration-ussuri
     parent: telemetry-dsvm-integration
+    nodeset: openstack-single-node-bionic
     override-checkout: stable/ussuri
 
 - job:
     name: telemetry-dsvm-integration-train
     parent: telemetry-dsvm-integration
+    nodeset: openstack-single-node-bionic
     override-checkout: stable/train
     vars:
       devstack_localrc:
