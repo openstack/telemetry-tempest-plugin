@@ -16,13 +16,20 @@ import unittest
 from gabbi import runner
 from gabbi import suitemaker
 from gabbi import utils
+from oslo_config import cfg
 from oslo_log import log as logging
 
 LOG = logging.getLogger(__name__)
+CONF = cfg.CONF
 
 
 def run_test(test_class_instance, test_dir, filename):
     d = utils.load_yaml(yaml_file=os.path.join(test_dir, filename))
+    cert_validate = not CONF.telemetry.disable_ssl_certificate_validation
+    if 'defaults' in d:
+        d['defaults']['cert_validate'] = cert_validate
+    else:
+        d['defaults'] = {'cert_validate': cert_validate}
     test_suite = suitemaker.test_suite_from_dict(
         loader=unittest.defaultTestLoader,
         test_base_name="gabbi",

@@ -70,6 +70,10 @@ TelemetryGroup = [
     cfg.IntOpt('alarm_threshold',
                default=10,
                help="Threshold to cross for the alarm to trigger."),
+    cfg.BoolOpt("disable_ssl_certificate_validation",
+                default=False,
+                help="Disable SSL certificate validation when running "
+                     "scenario tests"),
 ]
 
 event_opts = [
