@@ -23,6 +23,7 @@
       - openstack/diskimage-builder
       - openstack/tempest
     vars:
+      configure_swap_size: 8192
       devstack_plugins:
         heat: https://opendev.org/openstack/heat
         ceilometer: https://opendev.org/openstack/ceilometer
@@ -71,6 +72,7 @@
       - openstack/diskimage-builder
       - openstack/tempest
     vars: &base_vars
+      configure_swap_size: 8192
       devstack_plugins:
         heat: https://opendev.org/openstack/heat
         ceilometer: https://opendev.org/openstack/ceilometer
@@ -132,6 +134,7 @@
     parent: telemetry-dsvm-integration
     nodeset: openstack-single-node-bionic
     override-checkout: stable/ussuri
+    voting: false
 
 - job:
     name: telemetry-dsvm-integration-train
