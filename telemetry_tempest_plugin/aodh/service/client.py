@@ -16,9 +16,11 @@
 import json
 
 from six.moves.urllib import parse as urllib
+from tempest import clients as tempest_clients
 from tempest import config
 from tempest.lib.common import rest_client
-from tempest import manager
+from tempest.lib.services import clients
+
 
 CONF = config.CONF
 
@@ -102,7 +104,7 @@ class AlarmingClient(rest_client.RestClient):
         return rest_client.ResponseBodyData(resp, body)
 
 
-class Manager(manager.Manager):
+class Manager(clients.ServiceClients):
 
     default_params = {
         'disable_ssl_certificate_validation':
@@ -119,7 +121,15 @@ class Manager(manager.Manager):
     alarming_params.update(default_params)
 
     def __init__(self, credentials=None, service=None):
-        super(Manager, self).__init__(credentials)
+        dscv = CONF.identity.disable_ssl_certificate_validation
+        _, uri = tempest_clients.get_auth_provider_class(credentials)
+        super(Manager, self).__init__(
+            credentials=credentials,
+            identity_uri=uri,
+            scope='project',
+            disable_ssl_certificate_validation=dscv,
+            ca_certs=CONF.identity.ca_certificates_file,
+            trace_requests=CONF.debug.trace_requests)
         self.set_alarming_client()
 
     def set_alarming_client(self):
