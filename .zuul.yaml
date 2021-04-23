@@ -94,6 +94,7 @@
     name: telemetry-dsvm-integration
     parent: telemetry-tempest-base
     branches: ^(?!stable/(ocata|pike|queens|rocky|stein|train)).*$
+    voting: false
 
 - job:
     name: telemetry-dsvm-integration
@@ -128,13 +129,13 @@
       Telemetry devstack tempest tests job for IPv6-only deployment
     required-projects: *base_required_projects
     vars: *base_vars
+    voting: false
 
 - job:
     name: telemetry-dsvm-integration-ussuri
     parent: telemetry-dsvm-integration
     nodeset: openstack-single-node-bionic
     override-checkout: stable/ussuri
-    voting: false
 
 - job:
     name: telemetry-dsvm-integration-train
