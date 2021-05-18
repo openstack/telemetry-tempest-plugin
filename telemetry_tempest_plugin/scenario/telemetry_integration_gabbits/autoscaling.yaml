@@ -67,30 +67,6 @@ tests:
       response_json_paths:
           $.`len`: 2
 
-    - name: check event
-      desc: Check panko for new instance.create.end event
-      url: $ENVIRON['PANKO_SERVICE_URL']/v2/events
-      method: GET
-      request_headers:
-          content-type: application/json
-      data:
-          q:
-            - field: event_type
-              op: eq
-              type: string
-              value: compute.instance.create.end
-            - field: resource_id
-              op: eq
-              type: string
-              value: $HISTORY['list servers grow'].$RESPONSE['$.servers[0].id']
-      poll:
-          count: 30
-          delay: 1
-      response_json_paths:
-          $.`len`: 1
-          $[0].event_type: compute.instance.create.end
-          $[0].traits[?(@.name='resource_id')].value: $HISTORY['list servers grow'].$RESPONSE['$.servers[0].id']
-
     - name: check alarm
       desc: Check the aodh alarm and its state
       url: $ENVIRON['AODH_SERVICE_URL']/v2/alarms

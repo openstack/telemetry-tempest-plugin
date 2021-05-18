@@ -20,10 +20,6 @@ service_option = [cfg.BoolOpt('ceilometer',
                               default=True,
                               help="Whether or not Ceilometer is expected to"
                                    "be available"),
-                  cfg.BoolOpt('panko',
-                              default=True,
-                              help="Whether or not Panko is expected to be"
-                                   "available"),
                   cfg.BoolOpt("aodh",
                               default=True,
                               help="Whether or not Aodh is expected to be"
