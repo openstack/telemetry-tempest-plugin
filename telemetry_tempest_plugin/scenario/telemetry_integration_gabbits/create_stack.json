@@ -23,7 +23,7 @@
                                 "#!/bin/sh\n",
                                 "echo 'Loading CPU'\n",
                                 "set -v\n",
-                                "cat /dev/urandom > /dev/null\n"
+                                "cat /dev/urandom > /dev/null & sleep 120 ; kill $! \n"
                             ]]}
                         }
                     }
@@ -34,18 +34,18 @@
                 "properties": {
                     "adjustment_type": "change_in_capacity",
                     "auto_scaling_group_id": { "get_resource": "asg" },
-                    "cooldown": 2,
+                    "cooldown": 60,
                     "scaling_adjustment": 1
                 }
             },
             "cpu_alarm_high": {
-                "type": "OS::Ceilometer::GnocchiAggregationByResourcesAlarm",
+                "type": "OS::Aodh::GnocchiAggregationByResourcesAlarm",
                 "properties": {
                     "description": "Scale-up if the mean CPU > 10% on 1 minute",
                     "metric": "$ENVIRON["CEILOMETER_METRIC_NAME"]",
                     "aggregation_method": "$ENVIRON["GNOCCHI_AGGREGATION_METHOD"]",
                     "granularity": $ENVIRON["AODH_GRANULARITY"],
-                    "evaluation_periods": 1,
+                    "evaluation_periods": 2,
                     "threshold": $ENVIRON["AODH_THRESHOLD"],
                     "comparison_operator": "gt",
                     "alarm_actions": [
@@ -59,6 +59,46 @@
                         }
                     ],
                     "resource_type": "instance",
+                    "query": {
+                        "str_replace": {
+                            "template": "{\"and\": [{\"=\": {\"server_group\": \"stack_id\"}}, {\"=\": {\"ended_at\": null}}]}",
+                            "params": {
+                                "stack_id": { "get_param": "OS::stack_id" }
+                            }
+                        }
+                    }
+                }
+            },
+            "web_server_scaledown_policy": {
+                "type": "OS::Heat::ScalingPolicy",
+                "properties": {
+                    "adjustment_type": "change_in_capacity",
+                    "auto_scaling_group_id": { "get_resource": "asg" },
+                    "cooldown": 60,
+                    "scaling_adjustment": -1
+                }
+            },
+            "cpu_alarm_low": {
+                "type": "OS::Aodh::GnocchiAggregationByResourcesAlarm",
+                "properties": {
+                    "description": "Scale-down if the mean CPU < 10% on 1 minute",
+                    "metric": "$ENVIRON["CEILOMETER_METRIC_NAME"]",
+                    "aggregation_method": "$ENVIRON["GNOCCHI_AGGREGATION_METHOD"]",
+                    "granularity": $ENVIRON["AODH_GRANULARITY"],
+                    "evaluation_periods": 2,
+                    "threshold": $ENVIRON["AODH_THRESHOLD"],
+                    "resource_type": "instance",
+                    "comparison_operator": "lt",
+                    "alarm_actions": [
+                        {
+                            "str_replace": {
+                                "template": "trust+url",
+                                "params": {
+                                    "url": { "get_attr": [ "web_server_scaledown_policy", "signal_url" ] }
+                                }
+                            }
+                        }
+                    ],
                     "query": {
                         "str_replace": {
                             "template": "{\"and\": [{\"=\": {\"server_group\": \"stack_id\"}}, {\"=\": {\"ended_at\": null}}]}",

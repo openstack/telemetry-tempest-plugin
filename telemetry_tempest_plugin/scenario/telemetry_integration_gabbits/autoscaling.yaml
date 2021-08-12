@@ -1,0 +1,163 @@
+defaults:
+    request_headers:
+        x-auth-token: $ENVIRON['USER_TOKEN']
+
+tests:
+    - name: list alarms none
+      desc: Lists alarms, none yet exist
+      verbose: all
+      url: $ENVIRON['AODH_SERVICE_URL']/v2/alarms
+      method: GET
+      response_strings:
+          - "[]"
+
+    - name: list servers none
+      desc: List servers, none yet exists
+      verbose: all
+      url: $ENVIRON['NOVA_SERVICE_URL']/servers
+      method: GET
+      response_strings:
+          - "[]"
+
+    - name: create stack
+      desc: Create an autoscaling stack
+      verbose: all
+      url: $ENVIRON['HEAT_SERVICE_URL']/stacks
+      method: POST
+      request_headers:
+          content-type: application/json
+      data: <@create_stack.json
+      status: 201
+
+    - name: control stack status
+      desc: Checks the stack have been created successfully
+      url: $ENVIRON['HEAT_SERVICE_URL']/stacks/$ENVIRON['STACK_NAME']
+      redirects: true
+      verbose: all
+      method: GET
+      status: 200
+      poll:
+          count: 300
+          delay: 1
+      response_json_paths:
+          $.stack.stack_status: "CREATE_COMPLETE"
+
+    - name: list servers grow
+      verbose: all
+      desc: Wait the autoscaling stack grow to two servers
+      url: $ENVIRON['NOVA_SERVICE_URL']/servers/detail
+      method: GET
+      poll:
+          count: 600
+          delay: 1
+      response_json_paths:
+          $.servers[0].metadata.'metering.server_group': $RESPONSE['$.stack.id']
+          $.servers[1].metadata.'metering.server_group': $RESPONSE['$.stack.id']
+          $.servers[0].status: ACTIVE
+          $.servers[1].status: ACTIVE
+          $.servers.`len`: 2
+
+    - name: check gnocchi resources
+      desc: Check the gnocchi resources for this two servers exists
+      url: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/search/resource/instance
+      verbose: all
+      method: POST
+      request_headers:
+          content-type: application/json
+      data:
+          =:
+              server_group: $RESPONSE['$.servers[0].metadata."metering.server_group"']
+      poll:
+          count: 600
+          delay: 1
+      response_json_paths:
+          $.`len`: 2
+
+    - name: check alarm cpu_alarm_high ALARM
+      verbose: all
+      desc: Check the aodh alarm and its state
+      url: $ENVIRON['AODH_SERVICE_URL']/v2/alarms?sort=name%3Aasc
+      method: GET
+      poll:
+          count: 600
+          delay: 5
+      response_strings:
+          - "$ENVIRON['STACK_NAME']-cpu_alarm_high"
+      response_json_paths:
+          $[0].state: alarm
+
+    - name: check alarm cpu_alarm_high is OK
+      verbose: all
+      desc: Check the aodh alarm and its state
+      url: $ENVIRON['AODH_SERVICE_URL']/v2/alarms?sort=name%3Aasc
+      method: GET
+      poll:
+          count: 600
+          delay: 5
+      response_strings:
+          - "$ENVIRON['STACK_NAME']-cpu_alarm_high-"
+      response_json_paths:
+          $[0].state: ok
+
+
+    - name: check alarm cpu_alarm_low is ALARM
+      verbose: all
+      desc: Check the aodh alarm and its state
+      url: $ENVIRON['AODH_SERVICE_URL']/v2/alarms?sort=name%3Aasc
+      method: GET
+      poll:
+          count: 600
+          delay: 5
+      response_strings:
+          - "$ENVIRON['STACK_NAME']-cpu_alarm_low-"
+      response_json_paths:
+          $[1].state: alarm
+
+    - name: list servers shrink
+      verbose: all
+      desc: Wait for the autoscaling stack to delete one server
+      url: $ENVIRON['NOVA_SERVICE_URL']/servers/detail
+      method: GET
+      poll:
+          count: 600
+          delay: 1
+      response_json_paths:
+          $.servers[0].metadata.'metering.server_group': $HISTORY['control stack status'].$RESPONSE['$.stack.id']
+          $.servers[0].status: ACTIVE
+          $.servers.`len`: 1
+
+    - name: get stack location
+      desc: Get the stack location
+      url: $ENVIRON['HEAT_SERVICE_URL']/stacks/$ENVIRON['STACK_NAME']
+      method: GET
+      status: 302
+
+    - name: delete stack
+      desc: Delete the stack
+      url: $LOCATION
+      method: DELETE
+      status: 204
+
+    - name: get deleted stack
+      desc: Check the stack have been deleted
+      url: $ENVIRON['HEAT_SERVICE_URL']/stacks/$ENVIRON['STACK_NAME']
+      redirects: true
+      method: GET
+      poll:
+          count: 300
+          delay: 5
+      status: 404
+
+    - name: list alarms deleted
+      desc: List alarms, no more exist
+      url: $ENVIRON['AODH_SERVICE_URL']/v2/alarms
+      method: GET
+      response_strings:
+          - "[]"
+
+    - name: list servers deleted
+      desc: List servers, no more exists
+      url: $ENVIRON['NOVA_SERVICE_URL']/servers
+      method: GET
+      response_strings:
+          - "[]"
