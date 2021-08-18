@@ -99,8 +99,8 @@
     name: telemetry-dsvm-integration
     parent: telemetry-tempest-base
     branches:
-      - stable/stein
       - stable/train
+      - stable/wallaby
     vars:
       devstack_localrc:
         USE_PYTHON3: False
@@ -130,10 +130,10 @@
     vars: *base_vars
 
 - job:
-    name: telemetry-dsvm-integration-ussuri
+    name: telemetry-dsvm-integration-wallaby
     parent: telemetry-dsvm-integration
     nodeset: openstack-single-node-bionic
-    override-checkout: stable/ussuri
+    override-checkout: stable/wallaby
     voting: false
 
 - job:
@@ -152,7 +152,7 @@
     check:
       jobs:
         - telemetry-dsvm-integration
-        - telemetry-dsvm-integration-ussuri
+        - telemetry-dsvm-integration-wallaby
         - telemetry-dsvm-integration-train
         - telemetry-dsvm-integration-ipv6-only
     gate:
