@@ -145,6 +145,20 @@
       devstack_localrc:
         USE_PYTHON3: True
 
+- job:
+    name: telemetry-dsvm-integration-centos-8s
+    nodeset: devstack-single-node-centos-8-stream
+    parent: telemetry-dsvm-integration
+    description: |
+      Telemetry devstack tempest tests job for a Centos 8 stream system
+
+- job:
+    name: telemetry-dsvm-integration-centos-8s-fips
+    parent: telemetry-dsvm-integration-centos-8s
+    description: |
+      Telemetry devstack tempest tests job for a FIPS enabled Centos 8 stream system
+    pre-run: playbooks/enable-fips.yaml
+
 - project:
     templates:
       - check-requirements
@@ -155,6 +169,8 @@
         - telemetry-dsvm-integration-ussuri
         - telemetry-dsvm-integration-train
         - telemetry-dsvm-integration-ipv6-only
+        - telemetry-dsvm-integration-centos-8s
+        - telemetry-dsvm-integration-centos-8s-fips
     gate:
       queue: telemetry
       jobs:
