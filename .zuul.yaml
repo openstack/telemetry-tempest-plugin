@@ -31,7 +31,6 @@
         panko: https://opendev.org/openstack/panko
       devstack_services:
         tempest: true
-        tls-proxy: false
       devstack_localrc:
         TEMPEST_PLUGINS: '"/opt/stack/telemetry-tempest-plugin /opt/stack/heat-tempest-plugin"'
         GNOCCHI_ARCHIVE_POLICY_TEMPEST: "ceilometer-high-rate"
@@ -80,7 +79,6 @@
         panko: https://opendev.org/openstack/panko
       devstack_services:
         tempest: true
-        tls-proxy: false
       devstack_localrc:
         USE_PYTHON3: True
         TEMPEST_PLUGINS: '"/opt/stack/telemetry-tempest-plugin /opt/stack/heat-tempest-plugin"'
