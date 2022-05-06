@@ -157,6 +157,20 @@
       Telemetry devstack tempest tests job for a FIPS enabled Centos 8 stream system
     pre-run: playbooks/enable-fips.yaml
 
+- job:
+    name: telemetry-dsvm-integration-centos-9s
+    nodeset: devstack-single-node-centos-9-stream
+    parent: telemetry-dsvm-integration
+    description: |
+      Telemetry devstack tempest tests job for a Centos 9 stream system
+
+- job:
+    name: telemetry-dsvm-integration-centos-9s-fips
+    parent: telemetry-dsvm-integration-centos-9s
+    description: |
+      Telemetry devstack tempest tests job for a FIPS enabled Centos 9 stream system
+    pre-run: playbooks/enable-fips.yaml
+
 - project:
     templates:
       - check-requirements
@@ -167,8 +181,8 @@
         - telemetry-dsvm-integration-wallaby
         - telemetry-dsvm-integration-train
         - telemetry-dsvm-integration-ipv6-only
-        - telemetry-dsvm-integration-centos-8s
-        - telemetry-dsvm-integration-centos-8s-fips
+        - telemetry-dsvm-integration-centos-9s
+        - telemetry-dsvm-integration-centos-9s-fips
     gate:
       queue: telemetry
       jobs:
