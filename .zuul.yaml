@@ -188,6 +188,7 @@
       nslookup_target: 'opendev.org'
 
 - project:
+    queue: telemetry
     templates:
       - check-requirements
       - tempest-plugin-jobs
@@ -200,7 +201,6 @@
         - telemetry-dsvm-integration-centos-9s
         - telemetry-dsvm-integration-centos-9s-fips
     gate:
-      queue: telemetry
       jobs:
         - telemetry-dsvm-integration
         - telemetry-dsvm-integration-ipv6-only
