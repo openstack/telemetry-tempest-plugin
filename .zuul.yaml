@@ -156,6 +156,8 @@
     description: |
       Telemetry devstack tempest tests job for a FIPS enabled Centos 8 stream system
     pre-run: playbooks/enable-fips.yaml
+    vars:
+      nslookup_target: 'opendev.org'
 
 - job:
     name: telemetry-dsvm-integration-centos-9s
@@ -170,6 +172,8 @@
     description: |
       Telemetry devstack tempest tests job for a FIPS enabled Centos 9 stream system
     pre-run: playbooks/enable-fips.yaml
+    vars:
+      nslookup_target: 'opendev.org'
 
 - project:
     templates:
