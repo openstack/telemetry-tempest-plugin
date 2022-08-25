@@ -52,8 +52,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'telemetry_tempest_plugin Release Notes'
-copyright = u'2017, OpenStack Developers'
+project = 'telemetry_tempest_plugin Release Notes'
+copyright = '2017, OpenStack Developers'
 
 # openstackdocstheme options
 openstackdocs_repo_name = 'openstack/telemetry-tempest-plugin'
@@ -208,8 +208,8 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     ('index', 'telemetry_tempest_pluginReleaseNotes.tex',
-     u'telemetry_tempest_plugin  Release Notes Documentation',
-     u'OpenStack Foundation', 'manual'),
+     'telemetry_tempest_plugin  Release Notes Documentation',
+     'OpenStack Foundation', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -239,8 +239,8 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'telemetry_tempest_pluginrereleasenotes',
-     u'telemetry_tempest_plugin  Release Notes Documentation',
-     [u'OpenStack Foundation'], 1)
+     'telemetry_tempest_plugin  Release Notes Documentation',
+     ['OpenStack Foundation'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -254,8 +254,8 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     ('index', 'telemetry_tempest_plugin ReleaseNotes',
-     u'telemetry_tempest_plugin Release Notes Documentation',
-     u'OpenStack Foundation', 'telemetry_tempest_pluginReleaseNotes',
+     'telemetry_tempest_plugin Release Notes Documentation',
+     'OpenStack Foundation', 'telemetry_tempest_pluginReleaseNotes',
      'One line description of project.',
      'Miscellaneous'),
 ]
