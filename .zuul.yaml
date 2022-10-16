@@ -130,7 +130,7 @@
 - job:
     name: telemetry-dsvm-integration-wallaby
     parent: telemetry-dsvm-integration
-    nodeset: openstack-single-node-bionic
+    nodeset: openstack-single-node-focal
     override-checkout: stable/wallaby
     voting: false
 
