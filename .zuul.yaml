@@ -37,6 +37,11 @@
         CEILOMETER_BACKEND: "gnocchi"
         CEILOMETER_PIPELINE_INTERVAL: 15
         USE_PYTHON3: False
+      devstack_local_conf:
+        test-config:
+          $TEMPEST_CONFIG:
+            telemetry:
+              disable_ssl_certificate_validation: True
       tempest_test_regex: telemetry_tempest_plugin
       tox_envlist: all
     branches:
@@ -85,6 +90,11 @@
         GNOCCHI_ARCHIVE_POLICY_TEMPEST: "ceilometer-high-rate"
         CEILOMETER_BACKEND: "gnocchi"
         CEILOMETER_PIPELINE_INTERVAL: 15
+      devstack_local_conf:
+        test-config:
+          $TEMPEST_CONFIG:
+            telemetry:
+              disable_ssl_certificate_validation: True
       tempest_test_regex: telemetry_tempest_plugin
       tox_envlist: all
 
