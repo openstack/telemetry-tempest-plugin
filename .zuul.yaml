@@ -37,6 +37,7 @@
         CEILOMETER_BACKEND: "gnocchi"
         CEILOMETER_PIPELINE_INTERVAL: 15
         USE_PYTHON3: False
+        CEILOMETER_ALARM_THRESHOLD: 6000000000
       devstack_local_conf:
         test-config:
           $TEMPEST_CONFIG:
@@ -90,6 +91,7 @@
         GNOCCHI_ARCHIVE_POLICY_TEMPEST: "ceilometer-high-rate"
         CEILOMETER_BACKEND: "gnocchi"
         CEILOMETER_PIPELINE_INTERVAL: 15
+        CEILOMETER_ALARM_THRESHOLD: 6000000000
       devstack_local_conf:
         test-config:
           $TEMPEST_CONFIG:
