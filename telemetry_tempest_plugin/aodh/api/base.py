@@ -29,7 +29,7 @@ class BaseAlarmingTest(tempest.test.BaseTestCase):
     @classmethod
     def skip_checks(cls):
         super(BaseAlarmingTest, cls).skip_checks()
-        if not CONF.service_available.aodh_plugin:
+        if not CONF.service_available.aodh:
             raise cls.skipException("Aodh support is required")
 
     @classmethod
