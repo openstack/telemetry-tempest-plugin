@@ -94,6 +94,7 @@
         CEILOMETER_BACKEND: "gnocchi"
         CEILOMETER_PIPELINE_INTERVAL: 15
         CEILOMETER_ALARM_THRESHOLD: 6000000000
+        GLOBAL_VENV: False
       devstack_local_conf:
         test-config:
           $TEMPEST_CONFIG:
@@ -101,11 +102,11 @@
               disable_ssl_certificate_validation: True
       tempest_test_regex: telemetry_tempest_plugin
       tox_envlist: all
+      branches: ^(?!stable/(ocata|pike|queens|rocky|stein)).*$
 
 - job:
     name: telemetry-dsvm-integration
     parent: telemetry-tempest-base
-    branches: ^(?!stable/(ocata|pike|queens|rocky|stein|train)).*$
 
 - job:
     name: telemetry-dsvm-integration
@@ -135,7 +136,6 @@
 - job:
     name: telemetry-dsvm-integration-ipv6-only
     parent: devstack-tempest-ipv6
-    branches: ^(?!stable/(ocata|pike|queens|rocky|stein)).*$
     description: |
       Telemetry devstack tempest tests job for IPv6-only deployment
     required-projects: *base_required_projects
@@ -153,6 +153,7 @@
     parent: telemetry-dsvm-integration
     nodeset: openstack-single-node-bionic
     override-checkout: stable/train
+    voting: false
     vars:
       devstack_localrc:
         USE_PYTHON3: True
