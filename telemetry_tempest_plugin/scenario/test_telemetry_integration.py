@@ -94,6 +94,8 @@ class TestTelemetryIntegration(manager.ScenarioTest):
             "HEAT_SERVICE_URL": self._get_endpoint(auth, "heat_plugin"),
             "NOVA_SERVICE_URL": self._get_endpoint(auth, "compute"),
             "GLANCE_SERVICE_URL": self._get_endpoint(auth, "image"),
+            "SG_CORE_SERVICE_URL":
+            str(config.CONF.telemetry.sg_core_service_url),
             "GLANCE_IMAGE_NAME": self.image_create(),
             "NOVA_FLAVOR_REF": config.CONF.compute.flavor_ref,
             "NEUTRON_NETWORK": networks[0].get('id'),
