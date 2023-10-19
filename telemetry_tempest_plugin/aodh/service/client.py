@@ -36,15 +36,21 @@ class AlarmingClient(rest_client.RestClient):
     def serialize(self, body):
         return json.dumps(body)
 
-    def list_alarms(self, query=None):
+    def list_alarms(self, query=None, sort=None, limit=None, marker=None):
         uri = '%s/alarms' % self.uri_prefix
         uri_dict = {}
         if query:
             uri_dict = {'q.field': query[0],
                         'q.op': query[1],
                         'q.value': query[2]}
+        if sort:
+            uri_dict.update({'sort': sort})
+        if limit is not None:
+            uri_dict.update({'limit': int(limit)})
+        if marker:
+            uri_dict.update({'marker': marker})
         if uri_dict:
-            uri += "?%s" % urllib.urlencode(uri_dict)
+            uri += "?%s" % urllib.urlencode(uri_dict, doseq=True)
         resp, body = self.get(uri)
         self.expected_success(200, resp.status)
         body = self.deserialize(body)
@@ -102,6 +108,28 @@ class AlarmingClient(rest_client.RestClient):
         self.expected_success(200, resp.status)
         body = self.deserialize(body)
         return rest_client.ResponseBodyData(resp, body)
+
+    def invalid_path(self, headers=None):
+        uri = "invalid_path"
+        extra_headers = headers is not None
+        resp, body = self.get(uri, headers, extra_headers)
+        self.expected_success(404, resp.status)
+        body = self.deserialize(body)
+        return rest_client.ResponseBodyData(resp, body)
+
+    def show_capabilities(self):
+        uri = "%s/capabilities" % (self.uri_prefix)
+        resp, body = self.get(uri)
+        self.expected_success(200, resp.status)
+        body = self.deserialize(body)
+        return rest_client.ResponseBody(resp, body)
+
+    def show_version(self):
+        uri = '/'
+        resp, body = self.get(uri)
+        self.expected_success(200, resp.status)
+        body = self.deserialize(body)
+        return rest_client.ResponseBody(resp, body)
 
 
 class Manager(clients.ServiceClients):
