@@ -1,0 +1,10 @@
+tests:
+  - name: Check for ceilometer metrics
+    desc: Check the sg-core prometheus endpoint for ceilometer metrics
+    GET: $ENVIRON['SG_CORE_SERVICE_URL']/metrics
+    poll:
+      count: 60
+      delay: 2
+    response_strings:
+      - "ceilometer_image_size"
+      - "sg_total_ceilometer_metric_decode_error_count{source=\"SG\"} 0"

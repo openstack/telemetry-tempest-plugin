@@ -70,6 +70,10 @@ TelemetryGroup = [
                 default=False,
                 help="Disable SSL certificate validation when running "
                      "scenario tests"),
+    cfg.StrOpt('sg_core_service_url',
+               default="127.0.0.1:3000",
+               help="URL to sg-core prometheus endpoint"),
+
 ]
 
 event_opts = [
