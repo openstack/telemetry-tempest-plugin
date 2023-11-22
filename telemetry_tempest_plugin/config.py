@@ -30,6 +30,10 @@ service_option = [cfg.BoolOpt('ceilometer',
                   cfg.BoolOpt('gnocchi',
                               default=True,
                               help="Whether or not Gnocchi is expected to be"
+                                   "available"),
+                  cfg.BoolOpt('sg_core',
+                              default=True,
+                              help="Whether or not sg-core is expected to be"
                                    "available")]
 
 telemetry_group = cfg.OptGroup(name='telemetry',

@@ -31,6 +31,8 @@ class BaseAlarmingTest(tempest.test.BaseTestCase):
         super(BaseAlarmingTest, cls).skip_checks()
         if not CONF.service_available.aodh:
             raise cls.skipException("Aodh support is required")
+        if not CONF.service_available.gnocchi:
+            raise cls.skipException("Gnocchi support is required")
 
     @classmethod
     def setup_clients(cls):

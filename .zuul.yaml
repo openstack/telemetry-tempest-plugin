@@ -93,6 +93,13 @@
         USE_PYTHON3: True
         TEMPEST_PLUGINS: '"/opt/stack/telemetry-tempest-plugin /opt/stack/heat-tempest-plugin"'
         GNOCCHI_ARCHIVE_POLICY_TEMPEST: "ceilometer-high-rate"
+        # NOTE(jwysogla): We can define both of the variables. In versions, where
+        # the ceilometer devstack plugin doesn't support the CEILOMETER_BACKENDS,
+        # it'll just ignore it and use the CEILOMETER_BACKEND. In versions, where
+        # CEILOMETER_BACKENDS is supported, the ceilometer devstack plugin will
+        # just try to merge the variables, so the final contents in this casse will
+        # be "gnocchi,sg-core"
+        CEILOMETER_BACKEND: "gnocchi"
         CEILOMETER_BACKENDS: "gnocchi,sg-core"
         CEILOMETER_PIPELINE_INTERVAL: 15
         CEILOMETER_ALARM_THRESHOLD: 6000000000
