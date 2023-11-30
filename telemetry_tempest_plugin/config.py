@@ -32,7 +32,7 @@ service_option = [cfg.BoolOpt('ceilometer',
                               help="Whether or not Gnocchi is expected to be"
                                    "available"),
                   cfg.BoolOpt('sg_core',
-                              default=True,
+                              default=False,
                               help="Whether or not sg-core is expected to be"
                                    "available")]
 
