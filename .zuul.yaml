@@ -53,6 +53,9 @@
           $TEMPEST_CONFIG:
             service_available:
               sg-core: True
+            telemetry_services:
+              aodh_gnocchi: True
+              aodh_prometheus: True
             telemetry:
               disable_ssl_certificate_validation: True
       tempest_test_regex: telemetry_tempest_plugin

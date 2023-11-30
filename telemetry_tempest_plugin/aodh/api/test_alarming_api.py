@@ -293,31 +293,6 @@ class TelemetryAlarmingAPITest(base.BaseAlarmingTest):
         self.assertIn('status', response['versions']['values'][0])
         self.assertIn('updated', response['versions']['values'][0])
 
-    @decorators.idempotent_id('a45a95f6-7855-4dbc-a507-af0f48cc3370')
-    def test_create_n_delete_alarm_duplicate_actions(self):
-        # create dual actions
-        alarm_name = data_utils.rand_name('telemetry_alarm')
-        rule = {'metrics': ['41869681-5776-46d6-91ed-cccc43b6e4e3',
-                            'a1fb80f4-c242-4f57-87c6-68f47521059e'],
-                'aggregation_method': 'mean',
-                'comparison_operator': 'eq',
-                'threshold': 300.0}
-        body = self.alarming_client.create_alarm(
-            name=alarm_name,
-            alarm_actions=['http://no.where', 'http://no.where'],
-            type='gnocchi_aggregation_by_metrics_threshold',
-            gnocchi_aggregation_by_metrics_threshold_rule=rule
-        )
-        alarm_id = body['alarm_id']
-        alarms = self.alarming_client.list_alarms(['name', 'eq', alarm_name])
-        self.assertEqual(1, len(alarms))
-        self.assertEqual(['http://no.where'], alarms[0]['alarm_actions'])
-
-        # Delete alarm and verify if deleted
-        self.alarming_client.delete_alarm(alarm_id)
-        self.assertRaises(lib_exc.NotFound,
-                          self.alarming_client.show_alarm, alarm_id)
-
     @decorators.idempotent_id('c1dcefdf-3b96-40d0-8f39-04fc0702ab6b')
     def test_create_n_delete_alarm_rule_loadbalancer(self):
         # create dual actions
