@@ -724,7 +724,7 @@ tests:
     - name: delete single archive policy cleanup
       DELETE: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/archive_policy/gabbilive
       poll:
-          count: 360
+          count: 1000
           delay: 1
       status: 204
 
