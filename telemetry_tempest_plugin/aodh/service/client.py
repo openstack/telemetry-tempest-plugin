@@ -15,7 +15,8 @@
 
 import json
 
-from six.moves.urllib import parse as urllib
+from urllib import parse
+
 from tempest import clients as tempest_clients
 from tempest import config
 from tempest.lib.common import rest_client
@@ -50,7 +51,7 @@ class AlarmingClient(rest_client.RestClient):
         if marker:
             uri_dict.update({'marker': marker})
         if uri_dict:
-            uri += "?%s" % urllib.urlencode(uri_dict, doseq=True)
+            uri += "?%s" % parse.urlencode(uri_dict, doseq=True)
         resp, body = self.get(uri)
         self.expected_success(200, resp.status)
         body = self.deserialize(body)
