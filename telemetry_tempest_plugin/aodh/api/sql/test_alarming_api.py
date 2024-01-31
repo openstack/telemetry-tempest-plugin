@@ -31,7 +31,7 @@ class TelemetryAlarmingAPIMysqlTest(base.BaseAlarmingTest):
         """
 
         super(TelemetryAlarmingAPIMysqlTest, cls).skip_checks()
-        if not CONF.telemetry_services.aodh_mysql:
+        if CONF.telemetry_services.alarm_backend != 'mysql':
             msg = ("%s: Skipping mysql specific tests withouth mysql" %
                    cls.__name__)
             raise cls.skipException(msg)

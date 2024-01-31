@@ -14,6 +14,7 @@
 #    under the License.
 
 from oslo_config import cfg
+from oslo_config import types
 
 
 service_option = [cfg.BoolOpt('ceilometer',
@@ -86,18 +87,14 @@ TelemetryGroup = [
 ]
 
 telemetry_services_opts = [
-    cfg.BoolOpt('aodh_gnocchi',
-                default=False,
-                help="Can telemetry plugin expect gnocchi backend"),
-    cfg.BoolOpt('aodh_mysql',
-                default=False,
-                help="Can telemetry plugin expect mysql backend"),
-    cfg.BoolOpt('aodh_postgre',
-                default=False,
-                help="Can telemetry plugin expect postgre backend"),
-    cfg.BoolOpt('aodh_prometheus',
-                default=False,
-                help="Can telemetry plugin expect prometheus backend"),
+    cfg.ListOpt('metric_backends',
+                default=[],
+                item_type=types.String(choices=['gnocchi', 'prometheus']),
+                help="Backend store used to store metrics"),
+    cfg.StrOpt('alarm_backend',
+               default='mysql',
+               choices=['mysql', 'postgresq'],
+               help="Database used by the aodh service"),
 ]
 
 event_opts = [

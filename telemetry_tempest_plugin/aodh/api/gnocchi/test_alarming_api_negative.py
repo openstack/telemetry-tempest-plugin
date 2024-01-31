@@ -39,7 +39,7 @@ class TelemetryAlarmingNegativeGnocchiTest(base.BaseAlarmingTest):
         """
 
         super(TelemetryAlarmingNegativeGnocchiTest, cls).skip_checks()
-        if not CONF.telemetry_services.aodh_gnocchi:
+        if 'gnocchi' not in CONF.telemetry_services.metric_backends:
             msg = ("%s: Skipping Gnocchi specific tests withouth Gnocchi" %
                    cls.__name__)
             raise cls.skipException(msg)
