@@ -30,14 +30,19 @@ service_option = [cfg.BoolOpt('ceilometer',
                   cfg.BoolOpt('gnocchi',
                               default=True,
                               help="Whether or not Gnocchi is expected to be"
-                                   "available"),
+                                   "available",
+                              deprecated_for_removal=True),
                   cfg.BoolOpt('sg_core',
                               default=False,
                               help="Whether or not sg-core is expected to be"
-                                   "available")]
+                                   "available",
+                              deprecated_for_removal=True)]
 
 telemetry_group = cfg.OptGroup(name='telemetry',
                                title='Telemetry Service Options')
+
+telemetry_services_group = cfg.OptGroup(name='telemetry_services',
+                                        title='Telemetry Services')
 
 event_group = cfg.OptGroup(name='event',
                            title='Event Service Options')
@@ -78,6 +83,21 @@ TelemetryGroup = [
                default="127.0.0.1:3000",
                help="URL to sg-core prometheus endpoint"),
 
+]
+
+telemetry_services_opts = [
+    cfg.BoolOpt('aodh_gnocchi',
+                default=False,
+                help="Can telemetry plugin expect gnocchi backend"),
+    cfg.BoolOpt('aodh_mysql',
+                default=False,
+                help="Can telemetry plugin expect mysql backend"),
+    cfg.BoolOpt('aodh_postgre',
+                default=False,
+                help="Can telemetry plugin expect postgre backend"),
+    cfg.BoolOpt('aodh_prometheus',
+                default=False,
+                help="Can telemetry plugin expect prometheus backend"),
 ]
 
 event_opts = [
