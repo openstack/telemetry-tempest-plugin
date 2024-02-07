@@ -93,7 +93,7 @@ telemetry_services_opts = [
                 help="Backend store used to store metrics"),
     cfg.StrOpt('alarm_backend',
                default='mysql',
-               choices=['mysql', 'postgresq'],
+               choices=['mysql', 'postgresql'],
                help="Database used by the aodh service"),
 ]
 
