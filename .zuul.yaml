@@ -52,7 +52,7 @@
         test-config:
           $TEMPEST_CONFIG:
             service_available:
-              sg-core: True
+              sg_core: True
             telemetry_services:
               metric_backends: gnocchi,prometheus
             telemetry:
