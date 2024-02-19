@@ -83,7 +83,10 @@ TelemetryGroup = [
     cfg.StrOpt('sg_core_service_url',
                default="127.0.0.1:3000",
                help="URL to sg-core prometheus endpoint"),
-
+    cfg.IntOpt('ceilometer_polling_interval',
+               default=300,
+               help="Polling interval configured for ceilometer. This can "
+                    "be used in test cases to wait for metrics to appear.")
 ]
 
 telemetry_services_opts = [

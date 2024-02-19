@@ -13,7 +13,7 @@
 import os
 
 from tempest import config
-import tempest.test
+from tempest.scenario import manager
 
 from telemetry_tempest_plugin.scenario import utils
 
@@ -23,22 +23,27 @@ TEST_DIR = os.path.join(os.path.dirname(__file__),
                         'telemetry_integration_prometheus_gabbits')
 
 
-class PrometheusGabbiTest(tempest.test.BaseTestCase):
-    credentials = ['admin']
+class PrometheusGabbiTest(manager.ScenarioTest):
+    credentials = ['admin', 'primary']
 
     TIMEOUT_SCALING_FACTOR = 5
 
     @classmethod
     def skip_checks(cls):
         super(PrometheusGabbiTest, cls).skip_checks()
-        if not CONF.service_available.sg_core:
-            raise cls.skipException("sg-core support is required")
+        for name in ["sg_core", "glance", "ceilometer"]:
+            if not getattr(CONF.service_available, name, False):
+                raise cls.skipException("%s support is required" %
+                                        name.capitalize())
 
     def _prep_test(self, filename):
         os.environ.update({
             "SG_CORE_SERVICE_URL":
             str(config.CONF.telemetry.sg_core_service_url),
+            "CEILOMETER_POLLING_INTERVAL":
+            str(CONF.telemetry.ceilometer_polling_interval),
         })
+        self.image_create()
 
 
 utils.generate_tests(PrometheusGabbiTest, TEST_DIR)

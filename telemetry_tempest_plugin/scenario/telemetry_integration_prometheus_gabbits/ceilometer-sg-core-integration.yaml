@@ -3,7 +3,7 @@ tests:
     desc: Check the sg-core prometheus endpoint for ceilometer metrics
     GET: $ENVIRON['SG_CORE_SERVICE_URL']/metrics
     poll:
-      count: 60
+      count: $ENVIRON['CEILOMETER_POLLING_INTERVAL']
       delay: 2
     response_strings:
       - "ceilometer_image_size"

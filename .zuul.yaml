@@ -59,6 +59,7 @@
               metric_backends: gnocchi,prometheus
             telemetry:
               disable_ssl_certificate_validation: True
+              ceilometer_polling_interval: 15
       tempest_test_regex: telemetry_tempest_plugin
       tox_envlist: all
 
