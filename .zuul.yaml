@@ -32,7 +32,7 @@
         sg-core: https://github.com/infrawatch/sg-core
       # NOTE(jokke): The following will disable the gabbi based integration tests for now.
       # We will need to figure out how we refactor them to be stable in the CI.
-      tempest_exclude_regex: (^telemetry_tempest_plugin\.scenario\.test_telemetry_integration)
+      tempest_exclude_regex: (^telemetry_tempest_plugin\.scenario\.test_telemetry_integration\.)
       devstack_services:
         tempest: true
       devstack_localrc:
@@ -47,6 +47,7 @@
         # be "gnocchi,sg-core"
         CEILOMETER_BACKEND: "gnocchi"
         CEILOMETER_BACKENDS: "gnocchi,sg-core"
+        PROMETHEUS_SERVICE_SCRAPE_TARGETS: "sg-core"
         CEILOMETER_PIPELINE_INTERVAL: 15
         CEILOMETER_ALARM_THRESHOLD: 6000000000
         GLOBAL_VENV: False

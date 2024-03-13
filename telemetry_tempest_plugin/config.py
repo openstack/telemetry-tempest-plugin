@@ -76,6 +76,9 @@ TelemetryGroup = [
     cfg.IntOpt('alarm_threshold',
                default=10,
                help="Threshold to cross for the alarm to trigger."),
+    cfg.IntOpt('scaledown_alarm_threshold',
+               default=2000000000,
+               help="Threshold to cross for the alarm to trigger."),
     cfg.BoolOpt("disable_ssl_certificate_validation",
                 default=False,
                 help="Disable SSL certificate validation when running "
@@ -83,6 +86,9 @@ TelemetryGroup = [
     cfg.StrOpt('sg_core_service_url',
                default="127.0.0.1:3000",
                help="URL to sg-core prometheus endpoint"),
+    cfg.StrOpt('prometheus_service_url',
+               default="127.0.0.1:9090",
+               help="URL to prometheus endpoint"),
     cfg.IntOpt('ceilometer_polling_interval',
                default=300,
                help="Polling interval configured for ceilometer. This can "
