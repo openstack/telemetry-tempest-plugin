@@ -125,7 +125,6 @@
     parent: telemetry-dsvm-integration
     description: |
       Telemetry devstack tempest tests job for a Centos 9 stream system
-    voting: false
 
 - job:
     name: telemetry-dsvm-integration-centos-9s-fips
@@ -135,7 +134,6 @@
     pre-run: playbooks/enable-fips.yaml
     vars:
       nslookup_target: 'opendev.org'
-    voting: false
 
 - project:
     queue: telemetry
