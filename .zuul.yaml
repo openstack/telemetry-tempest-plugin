@@ -47,6 +47,7 @@
         # be "gnocchi,sg-core"
         CEILOMETER_BACKEND: "gnocchi"
         CEILOMETER_BACKENDS: "gnocchi,sg-core"
+        PROMETHEUS_SERVICE_SCRAPE_TARGETS: "sg-core"
         CEILOMETER_PIPELINE_INTERVAL: 15
         CEILOMETER_ALARM_THRESHOLD: 6000000000
         GLOBAL_VENV: False

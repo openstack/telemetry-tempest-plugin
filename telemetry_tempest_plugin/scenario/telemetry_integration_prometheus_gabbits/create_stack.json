@@ -1,0 +1,90 @@
+{
+    "stack_name": "$ENVIRON['STACK_NAME']",
+    "template": {
+        "heat_template_version": "2013-05-23",
+        "description": "Integration Test AutoScaling with heat+ceilometer+prometheus+aodh",
+        "resources": {
+            "asg": {
+                "type": "OS::Heat::AutoScalingGroup",
+                "properties": {
+                    "min_size": 1,
+                    "max_size": 2,
+                    "resource": {
+                        "type": "OS::Nova::Server",
+                        "properties": {
+                            "networks": [{ "network": "$ENVIRON['NEUTRON_NETWORK']" }],
+                            "flavor": "$ENVIRON['NOVA_FLAVOR_REF']",
+                            "image": "$ENVIRON['GLANCE_IMAGE_NAME']",
+                            "metadata": {
+                                "metering.server_group": { "get_param": "OS::stack_id" }
+                            },
+                            "user_data_format": "RAW",
+                            "user_data": {"Fn::Join": ["", [
+                                "#!/bin/sh\n",
+                                "echo 'Loading CPU'\n",
+                                "set -v\n",
+                                "cat /dev/urandom > /dev/null & sleep 120 ; kill $! \n"
+                            ]]}
+                        }
+                    }
+                }
+            },
+            "web_server_scaleup_policy": {
+                "type": "OS::Heat::ScalingPolicy",
+                "properties": {
+                    "adjustment_type": "change_in_capacity",
+                    "auto_scaling_group_id": { "get_resource": "asg" },
+                    "cooldown": 60,
+                    "scaling_adjustment": 1
+                }
+            },
+            "cpu_alarm_high": {
+                "type": "OS::Aodh::PrometheusAlarm",
+                "properties": {
+                    "description": "Scale-up if the mean CPU is higher than the threshold",
+                    "threshold": $ENVIRON["AODH_THRESHOLD"],
+                    "comparison_operator": "gt",
+                    "alarm_actions": [
+                        {
+                            "str_replace": {
+                                "template": "trust+url",
+                                "params": {
+                                    "url": { "get_attr": [ "web_server_scaleup_policy", "signal_url" ] }
+                                }
+                            }
+                        }
+                    ],
+                    "query": "(rate(ceilometer_cpu{resource_name=~'te-$ENVIRON['RESOURCE_PREFIX'].*'}[1m])) * 100"
+                }
+            },
+            "web_server_scaledown_policy": {
+                "type": "OS::Heat::ScalingPolicy",
+                "properties": {
+                    "adjustment_type": "change_in_capacity",
+                    "auto_scaling_group_id": { "get_resource": "asg" },
+                    "cooldown": 60,
+                    "scaling_adjustment": -1
+                }
+            },
+            "cpu_alarm_low": {
+                "type": "OS::Aodh::PrometheusAlarm",
+                "properties": {
+                    "description": "Scale-down if the mean CPU is lower than the threshold",
+                    "threshold": $ENVIRON["SCALEDOWN_THRESHOLD"],
+                    "comparison_operator": "lt",
+                    "alarm_actions": [
+                        {
+                            "str_replace": {
+                                "template": "trust+url",
+                                "params": {
+                                    "url": { "get_attr": [ "web_server_scaledown_policy", "signal_url" ] }
+                                }
+                            }
+                        }
+                    ],
+                    "query": "(rate(ceilometer_cpu{resource_name=~'te-$ENVIRON['RESOURCE_PREFIX'].*'}[1m])) * 100"
+                }
+            }
+        }
+    }
+}
