@@ -62,7 +62,7 @@ class TelemetryAlarmingAPIMysqlTest(base.BaseAlarmingTest):
                 body = self.alarming_client.create_alarm(
                     name=alarm_name,
                     type='event',
-                    severity=random.choice(sevs),
+                    severity=sevs[j % 2],
                     event_rule=self.rule)
                 alarms[alarm_name].append(body['alarm_id'])
         ordered_alarms = []
