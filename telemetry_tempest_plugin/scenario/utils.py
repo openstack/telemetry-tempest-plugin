@@ -38,7 +38,7 @@ def run_test(test_class_instance, test_dir, filename):
         host='example.com', port=None,
         fixture_module=None,
         intercept=None,
-        handlers=runner.initialize_handlers([]),
+        handlers=runner.initialize_handlers([], []),
         test_loader_name="tempest")
 
     # NOTE(sileht): We hide stdout/stderr and reraise the failure
