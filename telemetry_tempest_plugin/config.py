@@ -92,7 +92,11 @@ TelemetryGroup = [
     cfg.IntOpt('ceilometer_polling_interval',
                default=300,
                help="Polling interval configured for ceilometer. This can "
-                    "be used in test cases to wait for metrics to appear.")
+                    "be used in test cases to wait for metrics to appear."),
+    cfg.IntOpt('prometheus_scrape_interval',
+               default=15,
+               help="Scrape interval configured for prometheus. This can "
+                    "be used in test cases to properly configure autoscaling")
 ]
 
 telemetry_services_opts = [

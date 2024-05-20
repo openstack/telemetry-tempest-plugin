@@ -54,7 +54,7 @@
                             }
                         }
                     ],
-                    "query": "(rate(ceilometer_cpu{resource_name=~'te-$ENVIRON['RESOURCE_PREFIX'].*'}[1m])) * 100"
+                    "query": "(rate(ceilometer_cpu{resource_name=~'te-$ENVIRON['RESOURCE_PREFIX'].*'}[$ENVIRON['PROMETHEUS_RATE_DURATION']s])) * 100"
                 }
             },
             "web_server_scaledown_policy": {
@@ -82,7 +82,7 @@
                             }
                         }
                     ],
-                    "query": "(rate(ceilometer_cpu{resource_name=~'te-$ENVIRON['RESOURCE_PREFIX'].*'}[1m])) * 100"
+                    "query": "(rate(ceilometer_cpu{resource_name=~'te-$ENVIRON['RESOURCE_PREFIX'].*'}[$ENVIRON['PROMETHEUS_RATE_DURATION']s])) * 100"
                 }
             }
         }

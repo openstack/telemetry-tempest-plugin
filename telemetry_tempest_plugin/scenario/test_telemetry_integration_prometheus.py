@@ -84,6 +84,9 @@ class PrometheusGabbiTest(manager.ScenarioTest):
         # using the last 7 digits from stack_name to create the autoscaling
         # resources.
         resource_prefix = stack_name[-7:]
+        prometheus_rate_duration = (
+            config.CONF.telemetry.ceilometer_polling_interval
+            + config.CONF.telemetry.prometheus_scrape_interval)
         os.environ.update({
             "USER_TOKEN": auth[0],
             "AODH_THRESHOLD": str(config.CONF.telemetry.alarm_threshold),
@@ -103,6 +106,7 @@ class PrometheusGabbiTest(manager.ScenarioTest):
             "NEUTRON_NETWORK": networks[0].get('id'),
             "STACK_NAME": stack_name,
             "RESOURCE_PREFIX": resource_prefix,
+            "PROMETHEUS_RATE_DURATION": str(prometheus_rate_duration),
         })
 
 
