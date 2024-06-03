@@ -11,8 +11,6 @@
       - ^releasenotes/.*$
     timeout: 7800
     required-projects: &base_required_projects
-      - openstack/devstack-gate
-      - openstack/panko
       - openstack/aodh
       - openstack/ceilometer
       - openstack/telemetry-tempest-plugin
@@ -28,7 +26,6 @@
         heat: https://opendev.org/openstack/heat
         ceilometer: https://opendev.org/openstack/ceilometer
         aodh: https://opendev.org/openstack/aodh
-        panko: https://opendev.org/openstack/panko
         sg-core: https://github.com/infrawatch/sg-core
       # NOTE(jokke): The following will disable the gabbi based integration tests for now.
       # We will need to figure out how we refactor them to be stable in the CI.
@@ -134,7 +131,7 @@
       Telemetry devstack tempest tests job for a FIPS enabled Centos 9 stream system
     pre-run: playbooks/enable-fips.yaml
     vars:
-      nslookup_target: 'opendev.org'
+      nslookup_target: "opendev.org"
 
 - project:
     queue: telemetry
