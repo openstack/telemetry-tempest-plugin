@@ -151,6 +151,9 @@ tests:
       desc: List alarms, no more exist
       url: $ENVIRON['AODH_SERVICE_URL']/v2/alarms
       method: GET
+      poll:
+          count: 30
+          delay: 2
       response_strings:
           - "[]"
 
@@ -158,5 +161,8 @@ tests:
       desc: List servers, no more exists
       url: $ENVIRON['NOVA_SERVICE_URL']/servers
       method: GET
+      poll:
+          count: 30
+          delay: 2
       response_strings:
           - "[]"
