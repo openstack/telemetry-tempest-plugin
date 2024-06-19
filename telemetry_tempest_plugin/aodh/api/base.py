@@ -62,3 +62,15 @@ class BaseAlarmingTest(tempest.test.BaseTestCase):
     def resource_cleanup(cls):
         cls.cleanup_resources(cls.alarming_client.delete_alarm, cls.alarm_ids)
         super(BaseAlarmingTest, cls).resource_cleanup()
+
+
+class BaseAlarmingAdminTest(BaseAlarmingTest):
+    """Base test case class for all Alarming API admin tests."""
+
+    credentials = ['primary', 'admin']
+
+    @classmethod
+    def setup_clients(cls):
+        super(BaseAlarmingAdminTest, cls).setup_clients()
+        cls.alarming_client = cls.os_primary.alarming_client
+        cls.admin_client = cls.os_admin.alarming_client
