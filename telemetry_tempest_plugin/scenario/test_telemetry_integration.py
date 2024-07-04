@@ -11,6 +11,8 @@
 #    under the License.
 
 import os
+import requests
+import time
 
 from tempest import config
 from tempest.lib.common.utils import data_utils
@@ -26,6 +28,10 @@ class TestTelemetryIntegration(manager.ScenarioTest):
     credentials = ['admin', 'primary']
 
     TIMEOUT_SCALING_FACTOR = 5
+
+    @classmethod
+    def resource_setup(cls):
+        cls.stack_name = data_utils.rand_name("telemetry")
 
     @classmethod
     def skip_checks(cls):
@@ -74,6 +80,29 @@ class TestTelemetryIntegration(manager.ScenarioTest):
                                 opt_section.catalog_type)
             return endpoints[0]['endpoints'][0][endpoint_type].rstrip('/')
 
+    @classmethod
+    def resource_cleanup(cls):
+        headers = {'X-Auth-Token': cls.os_primary.auth_provider.get_auth()[0]}
+        url = os.environ['HEAT_SERVICE_URL'] + "/stacks/" + cls.stack_name
+        r = requests.get(url, headers=headers)
+
+        if r.status_code == 200 and \
+                "stack" in r.json():
+            stack = r.json()["stack"]
+            stack_url = (f'{os.environ["HEAT_SERVICE_URL"]}/stacks/'
+                         f'{stack["stack_name"]}/{stack["id"]}')
+            requests.delete(stack_url, headers=headers)
+
+            repeats = 0
+            r = requests.get(stack_url, headers=headers)
+            while r.json()["stack"]["stack_status"] == \
+                    "DELETE_IN_PROGRESS" and repeats < 30:
+                time.sleep(2)
+                r = requests.get(stack_url, headers=headers)
+                repeats += 1
+
+        super(TestTelemetryIntegration, cls).resource_cleanup()
+
     def _prep_test(self, filename):
         admin_auth = self.os_admin.auth_provider.get_auth()
         auth = self.os_primary.auth_provider.get_auth()
@@ -99,7 +128,7 @@ class TestTelemetryIntegration(manager.ScenarioTest):
             "GLANCE_IMAGE_NAME": self.image_create(),
             "NOVA_FLAVOR_REF": config.CONF.compute.flavor_ref,
             "NEUTRON_NETWORK": networks[0].get('id'),
-            "STACK_NAME": data_utils.rand_name('telemetry'),
+            "STACK_NAME": self.stack_name,
         })
 
 
