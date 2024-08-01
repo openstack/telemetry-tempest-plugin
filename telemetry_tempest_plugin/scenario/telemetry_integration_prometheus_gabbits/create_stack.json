@@ -23,7 +23,7 @@
                                 "#!/bin/sh\n",
                                 "echo 'Loading CPU'\n",
                                 "set -v\n",
-                                "cat /dev/urandom > /dev/null & sleep 120 ; kill $! \n"
+                                "cat /dev/urandom > /dev/null & sleep $ENVIRON['LOAD_LENGTH'] ; kill $! \n"
                             ]]}
                         }
                     }
