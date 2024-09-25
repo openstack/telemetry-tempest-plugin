@@ -57,22 +57,6 @@ tests:
           $.servers[1].status: ACTIVE
           $.servers.`len`: 2
 
-    - name: check prometheus query for the servers count .
-      desc: Check the Prometheus metric for the existence of servers
-      url: $ENVIRON['PROMETHEUS_SERVICE_URL']/api/v1/query
-      verbose: all
-      method: POST
-      request_headers:
-          content-type: application/x-www-form-urlencoded
-      data:
-         query=ceilometer_cpu{resource_name=~"te-$ENVIRON['RESOURCE_PREFIX'].*"}
-      poll:
-          count: 300
-          delay: 1
-      status: 200
-      response_json_paths:
-          $.data.result.`len`: 2
-
     - name: check alarm cpu_alarm_high ALARM
       verbose: all
       desc: Check the aodh alarm and its state

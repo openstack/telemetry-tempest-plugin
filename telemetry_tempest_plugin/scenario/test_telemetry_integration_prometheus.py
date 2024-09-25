@@ -104,6 +104,28 @@ class PrometheusGabbiTest(manager.ScenarioTest):
 
         super(PrometheusGabbiTest, cls).resource_cleanup()
 
+    def _prep_query(self, prometheus_rate_duration, resource_prefix):
+        if config.CONF.telemetry.autoscaling_instance_grouping == "metadata":
+            query = ("\"(rate(ceilometer_cpu{{server_group=~'stack_id'}}"
+                     "[{}s])) * 100\"").format(prometheus_rate_duration)
+            metadata_query = '''
+            {{
+                "str_replace": {{
+                    "template": {},
+                    "params": {{
+                        "stack_id": {{ "get_param": "OS::stack_id" }}
+                    }}
+                }}
+            }}
+            '''.format(query)
+            return metadata_query
+
+        else:
+            prefix_query = '''
+            "(rate(ceilometer_cpu{{resource_name=~'te-{}.*'}}[{}s])) * 100"
+            '''.format(resource_prefix, prometheus_rate_duration)
+            return prefix_query
+
     def _prep_test(self, filename):
         auth = self.os_primary.auth_provider.get_auth()
         networks = self.os_primary.networks_client.list_networks(
@@ -115,6 +137,7 @@ class PrometheusGabbiTest(manager.ScenarioTest):
         prometheus_rate_duration = (
             config.CONF.telemetry.ceilometer_polling_interval
             + config.CONF.telemetry.prometheus_scrape_interval)
+        query = self._prep_query(prometheus_rate_duration, resource_prefix)
         os.environ.update({
             "USER_TOKEN": auth[0],
             "AODH_THRESHOLD": str(config.CONF.telemetry.alarm_threshold),
@@ -136,6 +159,7 @@ class PrometheusGabbiTest(manager.ScenarioTest):
             "RESOURCE_PREFIX": resource_prefix,
             "PROMETHEUS_RATE_DURATION": str(prometheus_rate_duration),
             "LOAD_LENGTH": str(prometheus_rate_duration * 2),
+            "QUERY": query,
         })
 
 
