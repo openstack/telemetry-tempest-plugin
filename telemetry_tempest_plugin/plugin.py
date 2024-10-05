@@ -36,30 +36,25 @@ class TelemetryTempestPlugin(plugins.TempestPlugin):
             tempest_config.service_option)
         config.register_opt_group(
             conf, tempest_config.telemetry_group,
-            tempest_config.TelemetryGroup)
+            tempest_config.telemetry_opts)
         config.register_opt_group(
             conf, tempest_config.telemetry_services_group,
             tempest_config.telemetry_services_opts)
         config.register_opt_group(
-            conf, tempest_config.event_group,
-            tempest_config.event_opts)
-        config.register_opt_group(
             conf, tempest_config.alarming_group,
-            tempest_config.AlarmingGroup)
+            tempest_config.alarming_opts)
         config.register_opt_group(
             conf, tempest_config.metric_group,
             tempest_config.metric_opts)
 
     def get_opt_lists(self):
         return [(tempest_config.telemetry_group.name,
-                 tempest_config.TelemetryGroup),
+                 tempest_config.telemetry_opts),
                 (tempest_config.telemetry_services_group.name,
                  tempest_config.telemetry_services_opts),
-                (tempest_config.event_group.name,
-                 tempest_config.event_opts),
                 (config.service_available_group.name,
                  tempest_config.service_option),
                 (tempest_config.alarming_group.name,
-                 tempest_config.AlarmingGroup),
+                 tempest_config.alarming_opts),
                 (tempest_config.metric_group.name,
                  tempest_config.metric_opts)]
