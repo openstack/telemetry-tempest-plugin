@@ -79,6 +79,12 @@
     parent: devstack-tempest-ipv6
     description: |
       Telemetry devstack tempest tests job for IPv6-only deployment
+    irrelevant-files:
+      - ^(test-|)requirements.txt$
+      - ^setup.cfg$
+      - ^doc/.*$
+      - ^.*\.rst$
+      - ^releasenotes/.*$
     required-projects: *base_required_projects
     vars: *base_vars
 
