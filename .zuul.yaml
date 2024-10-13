@@ -33,18 +33,9 @@
       devstack_services:
         tempest: true
       devstack_localrc:
-        USE_PYTHON3: True
         TEMPEST_PLUGINS: '"/opt/stack/telemetry-tempest-plugin /opt/stack/heat-tempest-plugin"'
         GNOCCHI_ARCHIVE_POLICY_TEMPEST: "ceilometer-high-rate"
-        # NOTE(jwysogla): We can define both of the variables. In versions, where
-        # the ceilometer devstack plugin doesn't support the CEILOMETER_BACKENDS,
-        # it'll just ignore it and use the CEILOMETER_BACKEND. In versions, where
-        # CEILOMETER_BACKENDS is supported, the ceilometer devstack plugin will
-        # just try to merge the variables, so the final contents in this casse will
-        # be "gnocchi,sg-core"
-        CEILOMETER_BACKEND: "gnocchi"
         CEILOMETER_BACKENDS: "gnocchi,sg-core"
-        PROMETHEUS_SERVICE_SCRAPE_TARGETS: "sg-core"
         CEILOMETER_PIPELINE_INTERVAL: 15
         CEILOMETER_ALARM_THRESHOLD: 6000000000
         GLOBAL_VENV: False
@@ -64,6 +55,45 @@
 - job:
     name: telemetry-dsvm-integration
     parent: telemetry-tempest-base
+
+- job:
+    name: telemetry-dsvm-integration-2024-2
+    parent: telemetry-tempest-base
+    override-checkout: stable/2024.2
+
+- job:
+    name: telemetry-dsvm-integration-2024-1
+    parent: telemetry-tempest-base
+    override-checkout: stable/2024.1
+
+- job:
+    name: telemetry-dsvm-integration-2023-2
+    parent: telemetry-tempest-base
+    override-checkout: stable/2023.2
+    vars: &no_prometheus_vars
+      devstack_localrc:
+        TEMPEST_PLUGINS: '"/opt/stack/telemetry-tempest-plugin /opt/stack/heat-tempest-plugin"'
+        GNOCCHI_ARCHIVE_POLICY_TEMPEST: "ceilometer-high-rate"
+        CEILOMETER_BACKENDS: "gnocchi"
+        CEILOMETER_PIPELINE_INTERVAL: 15
+        CEILOMETER_ALARM_THRESHOLD: 6000000000
+        GLOBAL_VENV: False
+      devstack_local_conf:
+        test-config:
+          $TEMPEST_CONFIG:
+            service_available:
+              sg_core: False
+            telemetry_services:
+              metric_backends: gnocchi
+            telemetry:
+              disable_ssl_certificate_validation: True
+              ceilometer_polling_interval: 15
+
+- job:
+    name: telemetry-dsvm-integration-2023-1
+    parent: telemetry-tempest-base
+    override-checkout: stable/2023.1
+    vars: *no_prometheus_vars
 
 - job:
     name: telemetry-dsvm-integration
@@ -141,7 +171,10 @@
     check:
       jobs:
         - telemetry-dsvm-integration
-        - telemetry-dsvm-integration-wallaby
+        - telemetry-dsvm-integration-2023-1
+        - telemetry-dsvm-integration-2023-2
+        - telemetry-dsvm-integration-2024-1
+        - telemetry-dsvm-integration-2024-2
         - telemetry-dsvm-integration-ipv6-only
         - telemetry-dsvm-integration-centos-9s
         - telemetry-dsvm-integration-centos-9s-fips
