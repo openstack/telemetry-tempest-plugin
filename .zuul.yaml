@@ -38,7 +38,7 @@
         CEILOMETER_BACKENDS: "gnocchi,sg-core"
         CEILOMETER_PIPELINE_INTERVAL: 15
         CEILOMETER_ALARM_THRESHOLD: 6000000000
-        GLOBAL_VENV: False
+        AODH_DEPLOY: uwsgi
       devstack_local_conf:
         test-config:
           $TEMPEST_CONFIG:
