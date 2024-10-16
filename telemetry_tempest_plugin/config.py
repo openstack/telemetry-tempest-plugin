@@ -94,14 +94,19 @@ telemetry_opts = [
                default=15,
                help="Scrape interval configured for prometheus. This can "
                     "be used in test cases to properly configure autoscaling"),
-    cfg.StrOpt('autoscaling_instance_grouping',
-               default='prefix',
-               choices=['prefix', 'metadata'],
-               help="How to group instances for autoscaling testing. "
-                    "'prefix' relies on the instances having a common string "
-                    "at the start of their name. 'metadata' is a new and "
-                    "prefered way of grouping since 2024.2 relying on "
-                    "metering.server_group instance metadata")
+    cfg.StrOpt(
+        'autoscaling_instance_grouping',
+        default='metadata',
+        choices=[
+            ('prefix', 'Use a common string at the start of instance names to '
+                       'group instances'),
+            ('metadata', 'Use metering.server_group instance metadata to '
+                         'group instances. This is preferred method since '
+                         '2025.1')
+        ],
+        help="The method to group instances for autoscaling testing. Note "
+             "that this option affects only tests with prometheus metric "
+             "backend")
 ]
 
 telemetry_services_opts = [
