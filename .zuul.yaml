@@ -99,13 +99,21 @@
     name: telemetry-dsvm-integration
     parent: telemetry-tempest-base
     branches:
+      - stable/2023.2
+      - stable/2023.1
+    vars: *no_prometheus_vars
+
+- job:
+    name: telemetry-dsvm-integration
+    parent: telemetry-tempest-base
+    branches:
       - stable/wallaby
     vars:
       devstack_localrc:
         USE_PYTHON3: False
 
 - job:
-    name: telemetry-dsvm-integration-ipv6-only
+    name: telemetry-dsvm-integration-ipv6-only-base
     parent: devstack-tempest-ipv6
     description: |
       Telemetry devstack tempest tests job for IPv6-only deployment
@@ -117,6 +125,22 @@
       - ^releasenotes/.*$
     required-projects: *base_required_projects
     vars: *base_vars
+
+- job:
+    name: telemetry-dsvm-integration-ipv6-only
+    parent: telemetry-dsvm-integration-ipv6-only-base
+    description: |
+      Telemetry devstack tempest tests job for IPv6-only deployment
+
+- job:
+    name: telemetry-dsvm-integration-ipv6-only
+    parent: telemetry-dsvm-integration-ipv6-only-base
+    description: |
+      Telemetry devstack tempest tests job for IPv6-only deployment
+    branches:
+      - stable/2023.2
+      - stable/2023.1
+    vars: *no_prometheus_vars
 
 - job:
     name: telemetry-dsvm-integration-wallaby
