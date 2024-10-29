@@ -45,16 +45,13 @@ telemetry_group = cfg.OptGroup(name='telemetry',
 telemetry_services_group = cfg.OptGroup(name='telemetry_services',
                                         title='Telemetry Services')
 
-event_group = cfg.OptGroup(name='event',
-                           title='Event Service Options')
-
 alarming_group = cfg.OptGroup(name='alarming_plugin',
                               title='Alarming Service Options')
 
 metric_group = cfg.OptGroup(name='metric',
                             title='Metric Service Options')
 
-TelemetryGroup = [
+telemetry_opts = [
     cfg.IntOpt('notification_wait',
                default=120,
                help="The seconds to wait for notifications which "
@@ -118,18 +115,7 @@ telemetry_services_opts = [
                help="Database used by the aodh service"),
 ]
 
-event_opts = [
-    cfg.StrOpt('catalog_type',
-               default='event',
-               help="Catalog type of the Event service."),
-    cfg.StrOpt('endpoint_type',
-               default='publicURL',
-               choices=['public', 'admin', 'internal',
-                        'publicURL', 'adminURL', 'internalURL'],
-               help="The endpoint type to use for the event service."),
-]
-
-AlarmingGroup = [
+alarming_opts = [
     cfg.StrOpt('catalog_type',
                default='alarming',
                help="Catalog type of the Alarming service."),
