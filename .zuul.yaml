@@ -90,12 +90,6 @@
               ceilometer_polling_interval: 15
 
 - job:
-    name: telemetry-dsvm-integration-2023-1
-    parent: telemetry-tempest-base
-    override-checkout: stable/2023.1
-    vars: *no_prometheus_vars
-
-- job:
     name: telemetry-dsvm-integration
     parent: telemetry-tempest-base
     branches:
@@ -201,7 +195,6 @@
     check:
       jobs:
         - telemetry-dsvm-integration
-        - telemetry-dsvm-integration-2023-1
         - telemetry-dsvm-integration-2023-2
         - telemetry-dsvm-integration-2024-1
         - telemetry-dsvm-integration-2024-2
