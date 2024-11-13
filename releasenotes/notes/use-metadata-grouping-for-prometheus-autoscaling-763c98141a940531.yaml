@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Added ability to use metadata instance grouping when testing prometheus based autoscaling.
+    This method of instance grouping is supported since 2025.1 and it's the default option.
+    The ``autoscaling_instance_grouping`` configuration option has been added, which switches
+    the grouping method between ``metadata`` grouping and ``instance`` grouping.
