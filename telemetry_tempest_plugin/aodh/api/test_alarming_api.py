@@ -61,7 +61,7 @@ class TelemetryAlarmingAPITest(base.BaseAlarmingTest):
             event_rule=self.rule)
         self.assertEqual(alarm_name, body['name'])
         alarm_id = body['alarm_id']
-        self.assertDictContainsSubset(self.rule, body['event_rule'])
+        self.assertLessEqual(self.rule.items(), body['event_rule'].items())
 
         # Update alarm with same rule and name
         body = self.alarming_client.update_alarm(
@@ -70,7 +70,7 @@ class TelemetryAlarmingAPITest(base.BaseAlarmingTest):
             name=alarm_name,
             type='event')
         self.assertEqual(alarm_name, body['name'])
-        self.assertDictContainsSubset(self.rule, body['event_rule'])
+        self.assertLessEqual(self.rule.items(), body['event_rule'].items())
 
         # Update alarm with new rule and new name
         new_rule = {
@@ -88,7 +88,7 @@ class TelemetryAlarmingAPITest(base.BaseAlarmingTest):
             name=alarm_name_updated,
             type='event')
         self.assertEqual(alarm_name_updated, body['name'])
-        self.assertDictContainsSubset(new_rule, body['event_rule'])
+        self.assertLessEqual(new_rule.items(), body['event_rule'].items())
 
         # Update severity
         body = self.alarming_client.update_alarm(
@@ -101,7 +101,7 @@ class TelemetryAlarmingAPITest(base.BaseAlarmingTest):
         # Get and verify details of an alarm after update
         body = self.alarming_client.show_alarm(alarm_id)
         self.assertEqual(alarm_name_updated, body['name'])
-        self.assertDictContainsSubset(new_rule, body['event_rule'])
+        self.assertLessEqual(new_rule.items(), body['event_rule'].items())
         self.assertEqual('low', body['severity'])
 
         # Get history for the alarm and verify the same
@@ -138,7 +138,7 @@ class TelemetryAlarmingAPITest(base.BaseAlarmingTest):
             event_rule=self.rule)
         self.assertEqual(alarm_name, body['name'])
         alarm_id = body['alarm_id']
-        self.assertDictContainsSubset(self.rule, body['event_rule'])
+        self.assertLessEqual(self.rule.items(), body['event_rule'].items())
         self.assertFalse(body['enabled'])
 
         # Query by enabled false and verify
@@ -162,7 +162,7 @@ class TelemetryAlarmingAPITest(base.BaseAlarmingTest):
             event_rule=self.rule)
         self.assertEqual(alarm_name, body['name'])
         alarm_id = body['alarm_id']
-        self.assertDictContainsSubset(self.rule, body['event_rule'])
+        self.assertLessEqual(self.rule.items(), body['event_rule'].items())
 
         # Verify default
         expected_defaults = {
@@ -189,7 +189,7 @@ class TelemetryAlarmingAPITest(base.BaseAlarmingTest):
             event_rule=self.rule)
         self.assertEqual(alarm_name, body['name'])
         alarm_id = body['alarm_id']
-        self.assertDictContainsSubset(self.rule, body['event_rule'])
+        self.assertLessEqual(self.rule.items(), body['event_rule'].items())
 
         # Verify initial state
         body = self.alarming_client.show_alarm(alarm_id)

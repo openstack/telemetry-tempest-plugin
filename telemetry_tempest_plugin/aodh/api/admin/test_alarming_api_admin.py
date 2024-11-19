@@ -63,7 +63,7 @@ class TelemetryAlarmingAPIAdminTest(base.BaseAlarmingAdminTest):
             alarm_actions=alarm_actions)
         self.assertEqual(alarm_name, body['name'])
         alarm_id = body['alarm_id']
-        self.assertDictContainsSubset(self.rule, body['event_rule'])
+        self.assertLessEqual(self.rule.items(), body['event_rule'].items())
         self.assertEqual(['test:', 'log:'], body['alarm_actions'])
 
         # Verify not seen by non-admin
@@ -84,7 +84,7 @@ class TelemetryAlarmingAPIAdminTest(base.BaseAlarmingAdminTest):
             event_rule=self.rule)
         self.assertEqual(alarm_name, body['name'])
         alarm_id = body['alarm_id']
-        self.assertDictContainsSubset(self.rule, body['event_rule'])
+        self.assertLessEqual(self.rule.items(), body['event_rule'].items())
 
         # Verify initial state as non-admin
         body = self.alarming_client.show_alarm(alarm_id)

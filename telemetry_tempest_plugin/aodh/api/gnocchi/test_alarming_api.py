@@ -51,9 +51,9 @@ class TelemetryAlarmingAPIGnocchiTest(base.BaseAlarmingTest):
         )
         self.assertEqual(alarm_name, body['name'])
         alarm_id = body['alarm_id']
-        self.assertDictContainsSubset(
-            rule,
-            body['gnocchi_aggregation_by_metrics_threshold_rule'])
+        self.assertLessEqual(
+            rule.items(),
+            body['gnocchi_aggregation_by_metrics_threshold_rule'].items())
 
         # Update alarm with same rule and name
         body = self.alarming_client.update_alarm(
@@ -63,9 +63,9 @@ class TelemetryAlarmingAPIGnocchiTest(base.BaseAlarmingTest):
             type='gnocchi_aggregation_by_metrics_threshold',
             gnocchi_aggregation_by_metrics_threshold_rule=rule)
         self.assertEqual(alarm_name, body['name'])
-        self.assertDictContainsSubset(
-            rule,
-            body['gnocchi_aggregation_by_metrics_threshold_rule'])
+        self.assertLessEqual(
+            rule.items(),
+            body['gnocchi_aggregation_by_metrics_threshold_rule'].items())
 
         # Update alarm with new rule and new name
         new_rule = {'metrics': ['41869681-5776-46d6-91ed-cccc43b6e4e3',
@@ -81,9 +81,9 @@ class TelemetryAlarmingAPIGnocchiTest(base.BaseAlarmingTest):
             type='gnocchi_aggregation_by_metrics_threshold',
             gnocchi_aggregation_by_metrics_threshold_rule=new_rule)
         self.assertEqual(alarm_name_updated, body['name'])
-        self.assertDictContainsSubset(
-            new_rule,
-            body['gnocchi_aggregation_by_metrics_threshold_rule'])
+        self.assertLessEqual(
+            new_rule.items(),
+            body['gnocchi_aggregation_by_metrics_threshold_rule'].items())
 
         # Update severity
         body = self.alarming_client.update_alarm(
@@ -97,9 +97,9 @@ class TelemetryAlarmingAPIGnocchiTest(base.BaseAlarmingTest):
         # Get and verify details of an alarm after update
         body = self.alarming_client.show_alarm(alarm_id)
         self.assertEqual(alarm_name_updated, body['name'])
-        self.assertDictContainsSubset(
-            new_rule,
-            body['gnocchi_aggregation_by_metrics_threshold_rule'])
+        self.assertLessEqual(
+            new_rule.items(),
+            body['gnocchi_aggregation_by_metrics_threshold_rule'].items())
         self.assertEqual('low', body['severity'])
 
         # Get history for the alarm and verify the same
