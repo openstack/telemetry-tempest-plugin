@@ -19,14 +19,14 @@
       - openstack/diskimage-builder
       - openstack/tempest
       - gnocchixyz/gnocchi
-      - infrawatch/sg-core
+      - openstack-k8s-operators/sg-core
     vars: &base_vars
       configure_swap_size: 8192
       devstack_plugins:
         heat: https://opendev.org/openstack/heat
         ceilometer: https://opendev.org/openstack/ceilometer
         aodh: https://opendev.org/openstack/aodh
-        sg-core: https://github.com/infrawatch/sg-core
+        sg-core: https://github.com/openstack-k8s-operators/sg-core
       # NOTE(jokke): The following will disable the gabbi based integration tests for now.
       # We will need to figure out how we refactor them to be stable in the CI.
       tempest_exclude_regex: (^telemetry_tempest_plugin\.scenario\.test_telemetry_integration\.)
