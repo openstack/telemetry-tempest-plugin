@@ -75,13 +75,7 @@
       devstack_local_conf:
         test-config:
           $TEMPEST_CONFIG:
-            service_available:
-              sg_core: True
-            telemetry_services:
-              metric_backends: gnocchi,prometheus
             telemetry:
-              disable_ssl_certificate_validation: True
-              ceilometer_polling_interval: 15
               autoscaling_instance_grouping: prefix
 
 - job:
@@ -102,11 +96,6 @@
         override-checkout: stable/4.6
     vars: &no_prometheus_vars
       devstack_localrc:
-        TEMPEST_PLUGINS: '"/opt/stack/telemetry-tempest-plugin /opt/stack/heat-tempest-plugin"'
-        GNOCCHI_ARCHIVE_POLICY_TEMPEST: "ceilometer-high-rate"
-        CEILOMETER_BACKENDS: "gnocchi"
-        CEILOMETER_PIPELINE_INTERVAL: 15
-        CEILOMETER_ALARM_THRESHOLD: 6000000000
         GLOBAL_VENV: False
       devstack_local_conf:
         test-config:
@@ -116,8 +105,6 @@
             telemetry_services:
               metric_backends: gnocchi
             telemetry:
-              disable_ssl_certificate_validation: True
-              ceilometer_polling_interval: 15
               autoscaling_instance_grouping: prefix
 
 - job:
