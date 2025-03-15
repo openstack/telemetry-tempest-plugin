@@ -2,7 +2,7 @@
     name: telemetry-tempest-base
     parent: devstack-tempest
     description: |
-      This job is for testing telemetry components. We test stable branches from wallaby onwards.
+      This job is for testing telemetry components.
     irrelevant-files:
       - ^(test-|)requirements.txt$
       - ^setup.cfg$
@@ -141,15 +141,6 @@
     vars: *no_prometheus_vars
 
 - job:
-    name: telemetry-dsvm-integration
-    parent: telemetry-tempest-base
-    branches:
-      - stable/wallaby
-    vars:
-      devstack_localrc:
-        USE_PYTHON3: False
-
-- job:
     name: telemetry-dsvm-integration-ipv6-only-base
     parent: devstack-tempest-ipv6
     description: |
@@ -200,41 +191,6 @@
       - name: gnocchixyz/gnocchi
         override-checkout: stable/4.5
     vars: *no_prometheus_vars
-
-- job:
-    name: telemetry-dsvm-integration-wallaby
-    parent: telemetry-dsvm-integration
-    nodeset: openstack-single-node-focal
-    override-checkout: stable/wallaby
-    voting: false
-
-- job:
-    name: telemetry-dsvm-integration-centos-8s
-    nodeset: devstack-single-node-centos-8-stream
-    parent: telemetry-dsvm-integration
-    branches:
-      - stable/wallaby
-      - stable/xena
-      - stable/yoga
-    description: |
-      Telemetry devstack tempest test job for Centos 8 stream system using python 36
-      i.e. yoga and below
-    vars:
-      devstack_localrc:
-        # for versions of devstack that don't explicitly support rhel8
-        FORCE: 'yes'
-        TEMPEST_BRANCH: '30.1.0'
-        TEMPEST_VENV_UPPER_CONSTRAINTS: '/opt/stack/requirements/upper-constraints.txt'
-
-- job:
-    name: telemetry-dsvm-integration-centos-8s-fips
-    parent: telemetry-dsvm-integration-centos-8s
-    description: |
-      Telemetry devstack tempest tests job for a FIPS enabled Centos 8 stream system using python36
-      i.e. yoga and below
-    pre-run: playbooks/enable-fips.yaml
-    vars:
-      nslookup_target: 'opendev.org'
 
 - job:
     name: telemetry-dsvm-integration-centos-9s
