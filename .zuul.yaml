@@ -13,6 +13,7 @@
     required-projects: &base_required_projects
       - openstack/aodh
       - openstack/ceilometer
+      - openstack/devstack-plugin-prometheus
       - openstack/telemetry-tempest-plugin
       - openstack/heat-tempest-plugin
       - openstack/heat
@@ -27,11 +28,13 @@
         ceilometer: https://opendev.org/openstack/ceilometer
         aodh: https://opendev.org/openstack/aodh
         sg-core: https://github.com/openstack-k8s-operators/sg-core
+        devstack-plugin-prometheus: https://opendev.org/openstack/devstack-plugin-prometheus
       # NOTE(jokke): The following will disable the gabbi based integration tests for now.
       # We will need to figure out how we refactor them to be stable in the CI.
       tempest_exclude_regex: (^telemetry_tempest_plugin\.scenario\.test_telemetry_integration\.)
       devstack_services:
         tempest: true
+        node_exporter: false
       devstack_localrc:
         TEMPEST_PLUGINS: '"/opt/stack/telemetry-tempest-plugin /opt/stack/heat-tempest-plugin"'
         GNOCCHI_ARCHIVE_POLICY_TEMPEST: "ceilometer-high-rate"
@@ -39,6 +42,9 @@
         CEILOMETER_PIPELINE_INTERVAL: 15
         CEILOMETER_ALARM_THRESHOLD: 6000000000
         AODH_DEPLOY: uwsgi
+        PROMETHEUS_CONF_DIR: /opt/stack
+        PROMETHEUS_CONFIG_FILE: /opt/stack/prometheus.yml
+        PROMETHEUS_CLIENT_CONF_DIR: /etc/openstack
       devstack_local_conf:
         test-config:
           $TEMPEST_CONFIG:
@@ -51,6 +57,9 @@
               ceilometer_polling_interval: 15
       tempest_test_regex: telemetry_tempest_plugin
       tox_envlist: all
+      zuul_copy_output:
+        /etc/prometheus/prometheus.yml: logs
+        /etc/openstack/prometheus.yaml: logs
 
 - job:
     name: telemetry-dsvm-integration
@@ -88,9 +97,22 @@
     vars: *prefix_grouping_vars
 
 - job:
-    name: telemetry-dsvm-integration-2023-2
+    name: telemetry-dsvm-integration
     parent: telemetry-tempest-base
-    override-checkout: stable/2023.2
+    branches:
+      - stable/2024.2
+      - stable/2024.1
+    required-projects:
+      - name: gnocchixyz/gnocchi
+        override-checkout: stable/4.6
+    vars: *prefix_grouping_vars
+
+- job:
+    name: telemetry-dsvm-integration
+    parent: telemetry-tempest-base
+    branches:
+      # TODO: We should switch to more recent version
+      - stable/2023.2
     required-projects:
       - name: gnocchixyz/gnocchi
         override-checkout: stable/4.6
@@ -111,27 +133,7 @@
     name: telemetry-dsvm-integration
     parent: telemetry-tempest-base
     branches:
-      - stable/2024.2
-      - stable/2024.1
-    required-projects:
-      - name: gnocchixyz/gnocchi
-        override-checkout: stable/4.6
-    vars: *prefix_grouping_vars
-
-- job:
-    name: telemetry-dsvm-integration
-    parent: telemetry-tempest-base
-    branches:
-      - stable/2023.2
-    required-projects:
-      - name: gnocchixyz/gnocchi
-        override-checkout: stable/4.6
-    vars: *no_prometheus_vars
-
-- job:
-    name: telemetry-dsvm-integration
-    parent: telemetry-tempest-base
-    branches:
+      # TODO: We should switch to more recent version
       - stable/2023.1
     required-projects:
       - name: gnocchixyz/gnocchi
@@ -192,6 +194,7 @@
     description: |
       Telemetry devstack tempest tests job for IPv6-only deployment
     branches:
+      # TODO: We should switch to more recent version
       - stable/2023.1
     required-projects:
       - name: gnocchixyz/gnocchi
@@ -258,7 +261,6 @@
       jobs:
         - telemetry-dsvm-integration
         - telemetry-dsvm-integration-ubuntu-jammy
-        - telemetry-dsvm-integration-2023-2
         - telemetry-dsvm-integration-2024-1
         - telemetry-dsvm-integration-2024-2
         - telemetry-dsvm-integration-ipv6-only
