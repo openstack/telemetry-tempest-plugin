@@ -74,8 +74,17 @@
     nodeset: openstack-single-node-jammy
 
 - job:
+    name: telemetry-dsvm-integration-2025-1
+    parent: telemetry-tempest-base
+    override-checkout: stable/2025.1
+    required-projects:
+      - name: gnocchixyz/gnocchi
+        override-checkout: stable/4.6
+
+- job:
     name: telemetry-dsvm-integration-2024-2
     parent: telemetry-tempest-base
+    nodeset: openstack-single-node-jammy
     override-checkout: stable/2024.2
     required-projects:
       - name: gnocchixyz/gnocchi
@@ -90,6 +99,7 @@
 - job:
     name: telemetry-dsvm-integration-2024-1
     parent: telemetry-tempest-base
+    nodeset: openstack-single-node-jammy
     override-checkout: stable/2024.1
     required-projects:
       - name: gnocchixyz/gnocchi
@@ -263,6 +273,7 @@
         - telemetry-dsvm-integration-ubuntu-jammy
         - telemetry-dsvm-integration-2024-1
         - telemetry-dsvm-integration-2024-2
+        - telemetry-dsvm-integration-2025-1
         - telemetry-dsvm-integration-ipv6-only
         - telemetry-dsvm-integration-centos-9s
         - telemetry-dsvm-integration-centos-9s-fips
