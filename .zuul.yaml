@@ -213,6 +213,65 @@
     vars:
       nslookup_target: "opendev.org"
 
+- job:
+    name: telemetry-dsvm-integration-aetos
+    parent: telemetry-tempest-base
+    # NOTE(jwysogla): Let's keep the job non-voting for now. Before switching
+    # to voting, we should:
+    # - run this job in Aetos
+    # - have Aodh do tenancy modification of queries
+    # - have a few runs of the job to ensure stability
+    voting: false
+    description: This is a job to test telemetry with Aetos
+    required-projects: &aetos_required_projects
+      - openstack/aodh
+      - openstack/ceilometer
+      - openstack/devstack-plugin-prometheus
+      - openstack/telemetry-tempest-plugin
+      - openstack/heat-tempest-plugin
+      - openstack/heat
+      - openstack/diskimage-builder
+      - openstack/tempest
+      - openstack/python-observabilityclient
+      - openstack/aetos
+      - openstack-k8s-operators/sg-core
+    vars: &aetos_vars
+      devstack_plugins:
+        heat: https://opendev.org/openstack/heat
+        ceilometer: https://opendev.org/openstack/ceilometer
+        aodh: https://opendev.org/openstack/aodh
+        sg-core: https://github.com/openstack-k8s-operators/sg-core
+        devstack-plugin-prometheus: https://opendev.org/openstack/devstack-plugin-prometheus
+        aetos: https://opendev.org/openstack/aetos
+      devstack_localrc:
+        TEMPEST_PLUGINS: '"/opt/stack/telemetry-tempest-plugin /opt/stack/heat-tempest-plugin"'
+        CEILOMETER_BACKENDS: "sg-core"
+        CEILOMETER_PIPELINE_INTERVAL: 15
+        CEILOMETER_ALARM_THRESHOLD: 6000000000
+        AODH_DEPLOY: uwsgi
+        PROMETHEUS_CUSTOM_SCRAPE_TARGETS: "localhost:3000"
+        SG_CORE_CONFIGURE_OBSERVABILITYCLIENT: false
+      devstack_local_conf:
+        test-config:
+          $TEMPEST_CONFIG:
+            service_available:
+              gnocchi: False
+
+- job:
+    name: telemetry-dsvm-integration-aetos-ipv6-only
+    parent: telemetry-dsvm-integration-ipv6-only-base
+    voting: false
+    description: |
+      Telemetry devstack tempest tests job with Aetos for IPv6-only deployment
+    irrelevant-files:
+      - ^(test-|)requirements.txt$
+      - ^setup.cfg$
+      - ^doc/.*$
+      - ^.*\.rst$
+      - ^releasenotes/.*$
+    required-projects: *aetos_required_projects
+    vars: *aetos_vars
+
 - project:
     queue: telemetry
     templates:
@@ -227,6 +286,8 @@
         - telemetry-dsvm-integration-ipv6-only
         - telemetry-dsvm-integration-centos-9s
         - telemetry-dsvm-integration-centos-9s-fips
+        - telemetry-dsvm-integration-aetos
+        - telemetry-dsvm-integration-aetos-ipv6-only
     gate:
       jobs:
         - telemetry-dsvm-integration
