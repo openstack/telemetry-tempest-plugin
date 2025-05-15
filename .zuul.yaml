@@ -4,6 +4,7 @@
     description: |
       This job is for testing telemetry components.
     irrelevant-files:
+      - ^\.gitreview$
       - ^(test-|)requirements.txt$
       - ^setup.cfg$
       - ^doc/.*$
