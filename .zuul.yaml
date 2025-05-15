@@ -65,14 +65,6 @@
     name: telemetry-dsvm-integration
     parent: telemetry-tempest-base
 
-# TODO(gmann): As per the 2025.1 testing runtime, we need to run at least
-# one job on jammy. This job can be removed in the next cycle(2025.2)
-- job:
-    name: telemetry-dsvm-integration-ubuntu-jammy
-    description: This is integrated compute job testing on Ubuntu jammy(22.04)
-    parent: telemetry-dsvm-integration
-    nodeset: openstack-single-node-jammy
-
 - job:
     name: telemetry-dsvm-integration-2024-2
     parent: telemetry-tempest-base
@@ -260,12 +252,10 @@
     check:
       jobs:
         - telemetry-dsvm-integration
-        - telemetry-dsvm-integration-ubuntu-jammy
         - telemetry-dsvm-integration-2024-1
         - telemetry-dsvm-integration-2024-2
         - telemetry-dsvm-integration-ipv6-only
     gate:
       jobs:
         - telemetry-dsvm-integration
-        - telemetry-dsvm-integration-ubuntu-jammy
         - telemetry-dsvm-integration-ipv6-only
