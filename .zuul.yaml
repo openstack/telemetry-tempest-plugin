@@ -264,8 +264,6 @@
         - telemetry-dsvm-integration-2024-1
         - telemetry-dsvm-integration-2024-2
         - telemetry-dsvm-integration-ipv6-only
-        - telemetry-dsvm-integration-centos-9s
-        - telemetry-dsvm-integration-centos-9s-fips
     gate:
       jobs:
         - telemetry-dsvm-integration
