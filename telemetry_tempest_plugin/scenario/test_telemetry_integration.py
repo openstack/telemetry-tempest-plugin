@@ -32,6 +32,14 @@ class TestTelemetryIntegration(manager.ScenarioTest):
     @classmethod
     def resource_setup(cls):
         cls.stack_name = data_utils.rand_name("telemetry")
+        networks = cls.os_primary.networks_client
+        subnets = cls.os_primary.subnets_client
+        cls.stack_network_id = networks.create_network()['network']['id']
+        cls.stack_subnet_id = subnets.create_subnet(
+            ip_version=4,
+            network_id=cls.stack_network_id,
+            cidr=config.CONF.network.project_network_cidr
+        )['subnet']['id']
 
     @classmethod
     def skip_checks(cls):
@@ -100,14 +108,14 @@ class TestTelemetryIntegration(manager.ScenarioTest):
                 time.sleep(2)
                 r = requests.get(stack_url, headers=headers)
                 repeats += 1
+        cls.os_primary.subnets_client.delete_subnet(cls.stack_subnet_id)
+        cls.os_primary.networks_client.delete_network(cls.stack_network_id)
 
         super(TestTelemetryIntegration, cls).resource_cleanup()
 
     def _prep_test(self, filename):
         admin_auth = self.os_admin.auth_provider.get_auth()
         auth = self.os_primary.auth_provider.get_auth()
-        networks = self.os_primary.networks_client.list_networks(
-            **{'router:external': False, 'fields': 'id'})['networks']
 
         os.environ.update({
             "ADMIN_TOKEN": admin_auth[0],
@@ -124,7 +132,7 @@ class TestTelemetryIntegration(manager.ScenarioTest):
             "NOVA_SERVICE_URL": self._get_endpoint(auth, "compute"),
             "GLANCE_IMAGE_NAME": self.image_create(),
             "NOVA_FLAVOR_REF": config.CONF.compute.flavor_ref,
-            "NEUTRON_NETWORK": networks[0].get('id'),
+            "NEUTRON_NETWORK": self.stack_network_id,
             "STACK_NAME": self.stack_name,
         })
 
