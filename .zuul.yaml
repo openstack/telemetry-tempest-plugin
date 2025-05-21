@@ -43,9 +43,7 @@
         CEILOMETER_PIPELINE_INTERVAL: 15
         CEILOMETER_ALARM_THRESHOLD: 6000000000
         AODH_DEPLOY: uwsgi
-        PROMETHEUS_CONF_DIR: /opt/stack
-        PROMETHEUS_CONFIG_FILE: /opt/stack/prometheus.yml
-        PROMETHEUS_CLIENT_CONF_DIR: /etc/openstack
+        PROMETHEUS_CUSTOM_SCRAPE_TARGETS: "localhost:3000"
       devstack_local_conf:
         test-config:
           $TEMPEST_CONFIG:
