@@ -201,13 +201,17 @@
     parent: telemetry-dsvm-integration
     description: |
       Telemetry devstack tempest tests job for a Centos 9 stream system
+    pre-run:
+      - playbooks/python-3.12-install.yaml
 
 - job:
     name: telemetry-dsvm-integration-centos-9s-fips
     parent: telemetry-dsvm-integration-centos-9s
     description: |
       Telemetry devstack tempest tests job for a FIPS enabled Centos 9 stream system
-    pre-run: playbooks/enable-fips.yaml
+    pre-run:
+      - playbooks/python-3.12-install.yaml
+      - playbooks/enable-fips.yaml
     vars:
       nslookup_target: "opendev.org"
 
@@ -223,6 +227,8 @@
         - telemetry-dsvm-integration-2024-2
         - telemetry-dsvm-integration-2025-1
         - telemetry-dsvm-integration-ipv6-only
+        - telemetry-dsvm-integration-centos-9s
+        - telemetry-dsvm-integration-centos-9s-fips
     gate:
       jobs:
         - telemetry-dsvm-integration
