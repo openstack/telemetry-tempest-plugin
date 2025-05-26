@@ -11,9 +11,9 @@
 #    under the License.
 
 import os
-import requests
 import time
 
+import requests
 from tempest import config
 from tempest.lib.common.utils import data_utils
 from tempest.scenario import manager
