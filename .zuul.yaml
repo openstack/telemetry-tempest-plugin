@@ -113,10 +113,10 @@
     parent: telemetry-tempest-base
     branches:
       # TODO: We should switch to more recent version
-      - stable/2023.2
+      - unmaintained/2023.1
     required-projects:
       - name: gnocchixyz/gnocchi
-        override-checkout: stable/4.6
+        override-checkout: stable/4.5
     vars: &no_prometheus_vars
       devstack_localrc:
         GLOBAL_VENV: False
@@ -129,17 +129,6 @@
               metric_backends: gnocchi
             telemetry:
               autoscaling_instance_grouping: prefix
-
-- job:
-    name: telemetry-dsvm-integration
-    parent: telemetry-tempest-base
-    branches:
-      # TODO: We should switch to more recent version
-      - stable/2023.1
-    required-projects:
-      - name: gnocchixyz/gnocchi
-        override-checkout: stable/4.5
-    vars: *no_prometheus_vars
 
 - job:
     name: telemetry-dsvm-integration-ipv6-only-base
@@ -174,20 +163,8 @@
     description: |
       Telemetry devstack tempest tests job for IPv6-only deployment
     branches:
-      - stable/2023.2
-    required-projects:
-      - name: gnocchixyz/gnocchi
-        override-checkout: stable/4.6
-    vars: *no_prometheus_vars
-
-- job:
-    name: telemetry-dsvm-integration-ipv6-only
-    parent: telemetry-dsvm-integration-ipv6-only-base
-    description: |
-      Telemetry devstack tempest tests job for IPv6-only deployment
-    branches:
       # TODO: We should switch to more recent version
-      - stable/2023.1
+      - unmaintained/2023.1
     required-projects:
       - name: gnocchixyz/gnocchi
         override-checkout: stable/4.5
