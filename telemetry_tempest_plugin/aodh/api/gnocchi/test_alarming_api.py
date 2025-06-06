@@ -29,8 +29,13 @@ class TelemetryAlarmingAPIGnocchiTest(base.BaseAlarmingTest):
         """
 
         super(TelemetryAlarmingAPIGnocchiTest, cls).skip_checks()
+        if not CONF.service_available.gnocchi:
+            msg = ("%s: Skipping Gnocchi specific tests without Gnocchi" %
+                   cls.__name__)
+            raise cls.skipException(msg)
+
         if 'gnocchi' not in CONF.telemetry_services.metric_backends:
-            msg = ("%s: Skipping Gnocchi specific tests withouth Gnocchi" %
+            msg = ("%s: Gnocchi is not one of the configured metric backends" %
                    cls.__name__)
             raise cls.skipException(msg)
 
