@@ -166,7 +166,6 @@ class PrometheusGabbiTest(manager.ScenarioTest):
             "NEUTRON_NETWORK": self.stack_network_id,
             "STACK_NAME": self.stack_name,
             "RESOURCE_PREFIX": resource_prefix,
-            "PROMETHEUS_RATE_DURATION": str(prometheus_rate_duration),
             "LOAD_LENGTH": str(prometheus_rate_duration * 2),
             "QUERY": query,
         })
