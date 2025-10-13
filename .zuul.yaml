@@ -22,7 +22,8 @@
       - openstack/heat
       - openstack/diskimage-builder
       - openstack/tempest
-      - gnocchixyz/gnocchi
+      - name: gnocchixyz/gnocchi
+        override-checkout: stable/4.7
       - openstack-k8s-operators/sg-core
     vars: &base_vars
       configure_swap_size: 8192
@@ -39,6 +40,7 @@
         tempest: true
         node_exporter: false
       devstack_localrc:
+        LIBS_FROM_GIT: gnocchi
         TEMPEST_PLUGINS: '"/opt/stack/telemetry-tempest-plugin /opt/stack/heat-tempest-plugin"'
         GNOCCHI_ARCHIVE_POLICY_TEMPEST: "ceilometer-high-rate"
         CEILOMETER_BACKENDS: "gnocchi,sg-core"
