@@ -3,8 +3,10 @@
     parent: devstack-tempest
     description: |
       This job is for testing telemetry components.
-    irrelevant-files:
+    irrelevant-files: &base_irrelevant_files
+      - ^\.gitignore$
       - ^\.gitreview$
+      - ^\.pre-commit-config\.yaml$
       - ^(test-|)requirements.txt$
       - ^setup.cfg$
       - ^doc/.*$
@@ -143,12 +145,7 @@
     parent: devstack-tempest-ipv6
     description: |
       Telemetry devstack tempest tests job for IPv6-only deployment
-    irrelevant-files:
-      - ^(test-|)requirements.txt$
-      - ^setup.cfg$
-      - ^doc/.*$
-      - ^.*\.rst$
-      - ^releasenotes/.*$
+    irrelevant-files: *base_irrelevant_files
     required-projects: *base_required_projects
     vars: *base_vars
 
@@ -248,12 +245,7 @@
     voting: false
     description: |
       Telemetry devstack tempest tests job with Aetos for IPv6-only deployment
-    irrelevant-files:
-      - ^(test-|)requirements.txt$
-      - ^setup.cfg$
-      - ^doc/.*$
-      - ^.*\.rst$
-      - ^releasenotes/.*$
+    irrelevant-files: *base_irrelevant_files
     required-projects: *aetos_required_projects
     vars: *aetos_vars
 
