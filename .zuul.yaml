@@ -100,16 +100,6 @@
               autoscaling_instance_grouping: prefix
 
 - job:
-    name: telemetry-dsvm-integration-2024-1
-    parent: telemetry-tempest-base
-    nodeset: openstack-single-node-jammy
-    override-checkout: stable/2024.1
-    required-projects:
-      - name: gnocchixyz/gnocchi
-        override-checkout: stable/4.6
-    vars: *prefix_grouping_vars
-
-- job:
     name: telemetry-dsvm-integration
     parent: telemetry-tempest-base
     branches:
@@ -259,7 +249,6 @@
     check:
       jobs:
         - telemetry-dsvm-integration
-        - telemetry-dsvm-integration-2024-1
         - telemetry-dsvm-integration-2024-2
         - telemetry-dsvm-integration-2025-1
         - telemetry-dsvm-integration-2025-2
