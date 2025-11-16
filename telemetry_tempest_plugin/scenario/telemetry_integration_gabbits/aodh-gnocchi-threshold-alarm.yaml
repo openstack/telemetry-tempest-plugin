@@ -3,9 +3,10 @@
 #
 #   user_id        : c8ecb587-d38c-426f-a58d-22b8d4a9a1d3
 #   project_id     : 709f6ed6-bfb3-4649-b303-0019a7f6aef2
+#   resource type  : tempest_test_resource
+#   resource name  : 662e46f3-8c06-430c-8a9c-adcaedd1272c
+#   archive policy : tempest-test-policy
 #   alarm name     : gabbi-gnocchi-threshold-resource-alarm
-#   resource_id    : gabbi-mock-resource
-#   archive policy : gabbiliveceph
 #
 
 defaults:
@@ -17,15 +18,15 @@ tests:
     # Setup gnocchi archive policy/resource type/resource/metrics
     #
 
-    - name: SETUP. create archive policy gabbiliveceph
-      desc: create archve policy 'gabbiliveceph' for tests
+    - name: SETUP. create archive policy tempest-test-policy
+      desc: create archve policy 'tempest-test-policy' for tests, though it might already be there
       POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/archive_policy
       # 409 when policy with such name already exists
       status: 201 || 409
       request_headers:
           content-type: application/json
       data:
-          name: gabbiliveceph
+          name: tempest-test-policy
           back_window: 0
           definition:
               - granularity: 1 second
@@ -40,7 +41,7 @@ tests:
               - max
 
     - name: check properties of created or existing archive policy
-      GET: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/archive_policy/gabbiliveceph
+      GET: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/archive_policy/tempest-test-policy
       status: 200
       request_headers:
           content-type: application/json
@@ -48,17 +49,17 @@ tests:
           $.back_window: 0
           $.aggregation_methods.`len`: 3
 
-    - name: create resource type ceph_account
-      desc: needed to create a resource
+    - name: create resource type tempest_test_resource
+      desc: create a resource type so that a resource can be created
       POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource_type
       status: 201 || 409
       request_headers:
           content-type: application/json
       data:
-          name: ceph_account
+          name: tempest_test_resource
 
-    - name: create resource of ceph_account type
-      POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource/ceph_account
+    - name: create resource of tempest_test_resource type
+      POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource/tempest_test_resource
       request_headers:
           content-type: application/json
       data:
@@ -66,23 +67,13 @@ tests:
           user_id:      27e342e4-4489-424f-a7e4-ba8ed9ad729c
           project_id:   d6d32769-c351-4758-b0a2-458fa1a065a3
           metrics:
-              radosgw.objects:
-                  archive_policy_name: gabbiliveceph
-              radosgw.objects.size:
-                  archive_policy_name: gabbiliveceph
-              radosgw.objects.containers:
-                  archive_policy_name: gabbiliveceph
-              radosgw.api.request:
-                  archive_policy_name: gabbiliveceph
-              radosgw.containers.objects:
-                  archive_policy_name: gabbiliveceph
-              radosgw.containers.objects.size:
-                  archive_policy_name: gabbiliveceph
+              tempest.test.metric:
+                  archive_policy_name: tempest-test-policy
       status: 201
       response_json_paths:
           $.user_id:    27e342e4-4489-424f-a7e4-ba8ed9ad729c
           $.project_id: d6d32769-c351-4758-b0a2-458fa1a065a3
-          $.metrics.`len`: 6
+          $.metrics.`len`: 1
 
     #
     # Actual tests
@@ -105,8 +96,8 @@ tests:
               - 709f6ed6-bfb3-4649-b303-0019a7f6aef2
               - gabbi-gnocchi-threshold-resource-alarm
       method: GET
-      response_json_paths:
-          $.`len`: 0
+      response_strings:
+          - "[]"
 
     - name: create alarm 'gabbi-gnocchi-threshold-resource-alarm'
       desc: create a threshold alarm gabbi-gnocchi-threshold-resource-alarm
@@ -117,7 +108,7 @@ tests:
           alarm_actions:
               - "http://site:8000/gnocchi-threshold-resource"
           alarm_id: null
-          description: An gabbilive threshold based alarm
+          description: An gnocchi threshold based alarm
           enabled: true
           insufficient_data_actions:
               - "http://site:8000/nodata-gnocchi-threshold-resource"
@@ -131,13 +122,13 @@ tests:
           type: gnocchi_resources_threshold
           gnocchi_resources_threshold_rule:
               evaluation_periods: 3
-              metric: "radosgw.objects.size"
+              metric: "tempest.test.metric"
               resource_id: "662e46f3-8c06-430c-8a9c-adcaedd1272c"
               aggregation_method: "mean"
               granularity: 60
               threshold: 5.0
               comparison_operator: "ge"
-              resource_type: ceph_account
+              resource_type: tempest_test_resource
           user_id: c8ecb587-d38c-426f-a58d-22b8d4a9a1d3
       status: 201
       response_json_paths:
@@ -170,7 +161,7 @@ tests:
           alarm_actions:
               - "http://site:8000/gnocchi-threshold-resource"
           alarm_id: null
-          description: An gabbilive threshold based alarm
+          description: An gnocchi threshold based alarm
           enabled: true
           insufficient_data_actions:
               - "http://site:8000/nodata-gnocchi-threshold-resource"
@@ -184,13 +175,13 @@ tests:
           type: gnocchi_resources_threshold
           gnocchi_resources_threshold_rule:
               evaluation_periods: 3
-              metric: "radosgw.objects.size"
+              metric: "tempest.test.metric"
               resource_id: "662e46f3-8c06-430c-8a9c-adcaedd1272c"
               aggregation_method: "mean"
               granularity: 60
               threshold: 5.0
               comparison_operator: "ge"
-              resource_type: ceph_account
+              resource_type: tempest_test_resource
           user_id: c8ecb587-d38c-426f-a58d-22b8d4a9a1d3
       response_json_paths:
           $.name: gabbi-gnocchi-threshold-resource-alarm
@@ -263,8 +254,8 @@ tests:
           $.alarm_actions: ["http://site:8000/gnocchi-threshold-resource"]
           $.name: gabbi-gnocchi-threshold-resource-alarm
           $.gnocchi_resources_threshold_rule.resource_id: "662e46f3-8c06-430c-8a9c-adcaedd1272c"
-          $.gnocchi_resources_threshold_rule.metric: "radosgw.objects.size"
-          $.gnocchi_resources_threshold_rule.resource_type: "ceph_account"
+          $.gnocchi_resources_threshold_rule.metric: "tempest.test.metric"
+          $.gnocchi_resources_threshold_rule.resource_type: "tempest_test_resource"
           $.user_id: c8ecb587-d38c-426f-a58d-22b8d4a9a1d3
 
     #
@@ -299,17 +290,42 @@ tests:
       GET: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource/generic/662e46f3-8c06-430c-8a9c-adcaedd1272c
       status: 200
 
-    - name: CLEANUP. delete test ceph_resource '662e46f3-8c06-430c-8a9c-adcaedd1272c'
-      desc: delete ceph_account resource 662e46f3-8c06-430c-8a9c-adcaedd1272c
+    - name: CLEANUP. delete test tempest_test_resource '662e46f3-8c06-430c-8a9c-adcaedd1272c'
+      desc: delete tempest_test_resource resource 662e46f3-8c06-430c-8a9c-adcaedd1272c
       DELETE: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource/generic/$RESPONSE['$.id']
       status: 204
 
-    - name: CLEANUP. delete resource type ceph_account
-      DELETE: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource_type/ceph_account
+    - name: CLEANUP. verify there's no resources of type tempest_test_resource
+      GET: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource/tempest_test_resource
+      status: 200
+      poll:
+          count: 360
+          delay: 1
+      response_strings:
+          - "[]"
+
+    - name: CLEANUP. delete resource type tempest_test_resource
+      DELETE: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource_type/tempest_test_resource
       status: 204
 
-    - name: CLEANUP. delete archive
-      DELETE: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/archive_policy/gabbiliveceph
-      status: 204
-      xfail: True
+    - name: CLEANUP. wait until resource type tempest_test_resource is deleted
+      GET: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/resource_type/tempest_test_resource
+      status: 404
+      poll:
+          count: 360
+          delay: 1
 
+    - name: CLEANUP. delete archive policy
+      desc: keep trying deleting archive policy, responds 400 until relevant measures expire
+      DELETE: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/archive_policy/tempest-test-policy
+      status: 204
+      poll:
+          count: 360
+          delay: 1
+
+    - name: CLEANUP. verify archive policy deleted
+      DELETE: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/archive_policy/tempest-test-policy
+      status: 404
+      poll:
+          count: 360
+          delay: 1
