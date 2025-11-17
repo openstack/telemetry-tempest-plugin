@@ -104,7 +104,7 @@
     parent: telemetry-tempest-base
     branches:
       - stable/2024.2
-      - stable/2024.1
+      - unmaintained/2024.1
     required-projects:
       - name: gnocchixyz/gnocchi
         override-checkout: stable/4.6
@@ -114,7 +114,6 @@
     name: telemetry-dsvm-integration
     parent: telemetry-tempest-base
     branches:
-      # TODO: We should switch to more recent version
       - unmaintained/2023.1
     required-projects:
       - name: gnocchixyz/gnocchi
@@ -148,7 +147,7 @@
       Telemetry devstack tempest tests job for IPv6-only deployment
     branches:
       - stable/2024.2
-      - stable/2024.1
+      - unmaintained/2024.1
     required-projects:
       - name: gnocchixyz/gnocchi
         override-checkout: stable/4.6
@@ -160,7 +159,6 @@
     description: |
       Telemetry devstack tempest tests job for IPv6-only deployment
     branches:
-      # TODO: We should switch to more recent version
       - unmaintained/2023.1
     required-projects:
       - name: gnocchixyz/gnocchi
