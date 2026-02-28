@@ -241,7 +241,8 @@ tests:
                 timespan: "0:01:01"
       status: 400
       response_strings:
-          - timespan ≠ granularity × points
+          # "timespan ≠ granularity × points"
+          - "timespan &#8800; granularity &#215; points"
 
     - name: create identical granularities policy
       POST: $ENVIRON['GNOCCHI_SERVICE_URL']/v1/archive_policy
@@ -256,7 +257,8 @@ tests:
                 points: 120
       status: 400
       response_strings:
-          - "More than one archive policy uses granularity `1.0'"
+          # "More than one archive policy uses granularity `1.0'"
+          - "More than one archive policy uses granularity `1.0&#x27;"
 
     - name: policy invalid unit
       desc: invalid unit for archive policy 'timespan' key

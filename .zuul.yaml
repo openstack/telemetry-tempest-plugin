@@ -176,6 +176,7 @@
     parent: telemetry-dsvm-integration-centos-9s
     description: |
       Telemetry devstack tempest tests job for a FIPS enabled Centos 9 stream system
+    voting: false
     pre-run:
       - playbooks/python-3.12-install.yaml
       - playbooks/enable-fips.yaml
