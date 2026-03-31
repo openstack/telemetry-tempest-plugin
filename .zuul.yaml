@@ -194,12 +194,6 @@
 - job:
     name: telemetry-dsvm-integration-aetos
     parent: telemetry-tempest-base
-    # NOTE(jwysogla): Let's keep the job non-voting for now. Before switching
-    # to voting, we should:
-    # - run this job in Aetos
-    # - have Aodh do tenancy modification of queries
-    # - have a few runs of the job to ensure stability
-    voting: false
     description: This is a job to test telemetry with Aetos
     required-projects: &aetos_required_projects
       - openstack/aodh
@@ -238,7 +232,6 @@
 - job:
     name: telemetry-dsvm-integration-aetos-ipv6-only
     parent: telemetry-dsvm-integration-ipv6-only-base
-    voting: false
     description: |
       Telemetry devstack tempest tests job with Aetos for IPv6-only deployment
     irrelevant-files: *base_irrelevant_files
