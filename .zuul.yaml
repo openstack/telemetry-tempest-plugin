@@ -36,6 +36,7 @@
       devstack_services:
         tempest: true
         node_exporter: false
+        podman_exporter: false
       devstack_localrc:
         LIBS_FROM_GIT: gnocchi
         TEMPEST_PLUGINS: '"/opt/stack/telemetry-tempest-plugin /opt/stack/heat-tempest-plugin"'
