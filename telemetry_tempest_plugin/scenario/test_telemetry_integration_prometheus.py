@@ -59,35 +59,21 @@ class PrometheusGabbiTest(manager.ScenarioTest):
     def _get_endpoint(auth, service):
         opt_section = getattr(config.CONF, service)
         endpoint_type = opt_section.endpoint_type
-        is_keystone_v3 = 'catalog' in auth[1]
-
-        if is_keystone_v3:
-            if endpoint_type.endswith("URL"):
-                endpoint_type = endpoint_type[:-3]
-            catalog = auth[1]['catalog']
-            endpoints = [e['endpoints'] for e in catalog
-                         if e['type'] == opt_section.catalog_type]
-            if not endpoints:
-                raise Exception("%s endpoint not found" %
-                                opt_section.catalog_type)
-            endpoints = [e['url'] for e in endpoints[0]
-                         if e['interface'] == endpoint_type]
-            if not endpoints:
-                raise Exception("%s interface not found for endpoint %s" %
-                                (endpoint_type,
-                                 opt_section.catalog_type))
-            return endpoints[0].rstrip('/')
-
-        else:
-            if not endpoint_type.endswith("URL"):
-                endpoint_type += "URL"
-            catalog = auth[1]['serviceCatalog']
-            endpoints = [e for e in catalog
-                         if e['type'] == opt_section.catalog_type]
-            if not endpoints:
-                raise Exception("%s endpoint not found" %
-                                opt_section.catalog_type)
-            return endpoints[0]['endpoints'][0][endpoint_type].rstrip('/')
+        if endpoint_type.endswith("URL"):
+            endpoint_type = endpoint_type[:-3]
+        catalog = auth[1]['catalog']
+        endpoints = [e['endpoints'] for e in catalog
+                     if e['type'] == opt_section.catalog_type]
+        if not endpoints:
+            raise Exception("%s endpoint not found" %
+                            opt_section.catalog_type)
+        endpoints = [e['url'] for e in endpoints[0]
+                     if e['interface'] == endpoint_type]
+        if not endpoints:
+            raise Exception("%s interface not found for endpoint %s" %
+                            (endpoint_type,
+                             opt_section.catalog_type))
+        return endpoints[0].rstrip('/')
 
     @classmethod
     def resource_cleanup(cls):
