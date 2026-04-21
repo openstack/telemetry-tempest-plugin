@@ -77,27 +77,29 @@ class PrometheusGabbiTest(manager.ScenarioTest):
 
     @classmethod
     def resource_cleanup(cls):
-        headers = {'X-Auth-Token': cls.os_primary.auth_provider.get_auth()[0]}
-        url = os.environ['HEAT_SERVICE_URL'] + "/stacks/" + cls.stack_name
-        r = requests.get(url, headers=headers)
+        if 'HEAT_SERVICE_URL' in os.environ:
+            headers = {
+                'X-Auth-Token': cls.os_primary.auth_provider.get_auth()[0]}
+            url = os.environ['HEAT_SERVICE_URL'] + "/stacks/" + cls.stack_name
+            r = requests.get(url, headers=headers)
 
-        if r.status_code == 200 and \
-                "stack" in r.json():
-            stack = r.json()["stack"]
-            stack_url = (f'{os.environ["HEAT_SERVICE_URL"]}/stacks/'
-                         f'{stack["stack_name"]}/{stack["id"]}')
-            requests.delete(stack_url, headers=headers)
+            if r.status_code == 200 and \
+                    "stack" in r.json():
+                stack = r.json()["stack"]
+                stack_url = (f'{os.environ["HEAT_SERVICE_URL"]}/stacks/'
+                             f'{stack["stack_name"]}/{stack["id"]}')
+                requests.delete(stack_url, headers=headers)
 
-            repeats = 0
-            r = requests.get(stack_url, headers=headers)
-            while r.json()["stack"]["stack_status"] == \
-                    "DELETE_IN_PROGRESS" and repeats < 30:
-                time.sleep(2)
+                repeats = 0
                 r = requests.get(stack_url, headers=headers)
-                repeats += 1
+                while r.json()["stack"]["stack_status"] == \
+                        "DELETE_IN_PROGRESS" and repeats < 30:
+                    time.sleep(2)
+                    r = requests.get(stack_url, headers=headers)
+                    repeats += 1
 
-        cls.os_primary.subnets_client.delete_subnet(cls.stack_subnet_id)
-        cls.os_primary.networks_client.delete_network(cls.stack_network_id)
+            cls.os_primary.subnets_client.delete_subnet(cls.stack_subnet_id)
+            cls.os_primary.networks_client.delete_network(cls.stack_network_id)
 
         super(PrometheusGabbiTest, cls).resource_cleanup()
 
