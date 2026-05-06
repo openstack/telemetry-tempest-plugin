@@ -37,7 +37,7 @@ class TelemetryAlarmingAPIAdminTest(base.BaseAlarmingAdminTest):
             for i in range(2):
                 cls.create_alarm(event_rule=cls.rule)
 
-    @decorators.idempotent_id('1c918e06-210b-41eb-bd45-14676dd77cd7')
+    @decorators.idempotent_id('25a4db0d-6150-47d5-ba48-0009ebde9aa8')
     def test_alarm_list(self):
         # List alarms
         alarm_list = self.admin_client.list_alarms(query=['all_projects',
