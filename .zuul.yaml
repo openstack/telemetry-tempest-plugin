@@ -138,6 +138,12 @@
     parent: telemetry-dsvm-integration-ipv6-only-base
     description: |
       Telemetry devstack tempest tests job for IPv6-only deployment
+
+- job:
+    name: telemetry-dsvm-integration-ipv6-only
+    parent: telemetry-dsvm-integration-ipv6-only-base
+    description: |
+      Telemetry devstack tempest tests job for IPv6-only deployment
     branches:
       - stable/2024.2
       - unmaintained/2024.1
