@@ -37,7 +37,6 @@
         node_exporter: false
       devstack_localrc:
         LIBS_FROM_GIT: gnocchi
-        TEMPEST_PLUGINS: '"/opt/stack/telemetry-tempest-plugin /opt/stack/heat-tempest-plugin"'
         GNOCCHI_ARCHIVE_POLICY_TEMPEST: "ceilometer-high-rate"
         CEILOMETER_BACKENDS: "gnocchi,sg-core"
         CEILOMETER_PIPELINE_INTERVAL: 15
@@ -54,6 +53,9 @@
             telemetry:
               disable_ssl_certificate_validation: True
               ceilometer_polling_interval: 15
+      tempest_plugins:
+        - heat-tempest-plugin
+        - telemetry-tempest-plugin
       tempest_test_regex: telemetry_tempest_plugin
       tox_envlist: all
       zuul_copy_output:
@@ -209,7 +211,6 @@
         devstack-plugin-prometheus: https://opendev.org/openstack/devstack-plugin-prometheus
         aetos: https://opendev.org/openstack/aetos
       devstack_localrc:
-        TEMPEST_PLUGINS: '"/opt/stack/telemetry-tempest-plugin /opt/stack/heat-tempest-plugin"'
         CEILOMETER_BACKENDS: "sg-core"
         CEILOMETER_PIPELINE_INTERVAL: 15
         CEILOMETER_ALARM_THRESHOLD: 6000000000
