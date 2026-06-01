@@ -35,6 +35,7 @@
       devstack_services:
         tempest: true
         node_exporter: false
+        podman_exporter: false
       devstack_localrc:
         LIBS_FROM_GIT: gnocchi
         GNOCCHI_ARCHIVE_POLICY_TEMPEST: "ceilometer-high-rate"
