@@ -111,7 +111,7 @@ telemetry_opts = [
 
 telemetry_services_opts = [
     cfg.ListOpt('metric_backends',
-                default=[],
+                default=['gnocchi'],
                 item_type=types.String(choices=['gnocchi', 'prometheus']),
                 help="Backend store used to store metrics"),
     cfg.StrOpt('alarm_backend',

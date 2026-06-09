@@ -1,0 +1,7 @@
+---
+fixes:
+  - |
+    The ``[telemetry] metric_backends`` option now defaults to ``gnocchi``.
+    This is consistent with the ``[service_available] gnocchi`` option which
+    defaults to True and now the plugin runs gnocchi-related tests without
+    explicit override.
