@@ -68,6 +68,14 @@
     parent: telemetry-tempest-base
 
 - job:
+    name: telemetry-dsvm-integration-2026-2
+    parent: telemetry-tempest-base
+    override-checkout: stable/2026.2
+    required-projects:
+      - name: gnocchixyz/gnocchi
+        override-checkout: stable/4.7
+
+- job:
     name: telemetry-dsvm-integration-2026-1
     parent: telemetry-tempest-base
     override-checkout: stable/2026.1
@@ -244,6 +252,7 @@
         - telemetry-dsvm-integration-2025-1
         - telemetry-dsvm-integration-2025-2
         - telemetry-dsvm-integration-2026-1
+        - telemetry-dsvm-integration-2026-2
         - telemetry-dsvm-integration-ipv6-only
         - telemetry-dsvm-integration-centos-9s
         - telemetry-dsvm-integration-centos-9s-fips
