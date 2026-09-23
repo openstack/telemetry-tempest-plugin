@@ -83,6 +83,14 @@ telemetry_opts = [
     cfg.URIOpt('sg_core_service_url',
                default="http://127.0.0.1:3000",
                help="URL to sg-core prometheus endpoint"),
+    cfg.StrOpt('sg_core_client_cert',
+               default='',
+               help="Path to a client certificate for mTLS "
+                    "authentication against sg-core"),
+    cfg.StrOpt('sg_core_client_key',
+               default='',
+               help="Path to a client private key for mTLS "
+                    "authentication against sg-core"),
     cfg.URIOpt('prometheus_service_url',
                default="http://127.0.0.1:9090",
                help="URL to prometheus endpoint"),

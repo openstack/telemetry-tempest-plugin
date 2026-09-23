@@ -145,6 +145,10 @@ class PrometheusGabbiTest(manager.ScenarioTest):
             "NOVA_SERVICE_URL": self._get_endpoint(auth, "compute"),
             "SG_CORE_SERVICE_URL":
             config.CONF.telemetry.sg_core_service_url,
+            "SG_CORE_CLIENT_CERT":
+            config.CONF.telemetry.sg_core_client_cert,
+            "SG_CORE_CLIENT_KEY":
+            config.CONF.telemetry.sg_core_client_key,
             "CEILOMETER_POLLING_INTERVAL":
             str(config.CONF.telemetry.ceilometer_polling_interval),
             "PROMETHEUS_SERVICE_URL":

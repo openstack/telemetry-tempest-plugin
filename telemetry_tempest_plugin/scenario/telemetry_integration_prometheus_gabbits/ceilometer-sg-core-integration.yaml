@@ -1,3 +1,5 @@
+ssl_client_cert: $ENVIRON['SG_CORE_CLIENT_CERT']
+ssl_client_key: $ENVIRON['SG_CORE_CLIENT_KEY']
 tests:
   - name: Check for ceilometer metrics
     desc: Check the sg-core prometheus endpoint for ceilometer metrics

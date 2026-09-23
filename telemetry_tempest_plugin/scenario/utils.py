@@ -11,16 +11,28 @@
 #    under the License.
 
 import os
+import re
 import unittest
 
 from gabbi import runner
 from gabbi import suitemaker
 from gabbi import utils
+import httpx
 from oslo_config import cfg
 from oslo_log import log as logging
 
 LOG = logging.getLogger(__name__)
 CONF = cfg.CONF
+
+ENVIRON_RE = re.compile(r"\$ENVIRON\['([^']+)'\]")
+
+
+def _resolve_environ(value):
+    """Resolve a $ENVIRON['VAR'] reference to its value."""
+    match = ENVIRON_RE.fullmatch(str(value))
+    if match:
+        return os.environ.get(match.group(1), '')
+    return str(value)
 
 
 def run_test(test_class_instance, test_dir, filename):
@@ -40,6 +52,15 @@ def run_test(test_class_instance, test_dir, filename):
         intercept=None,
         handlers=runner.initialize_handlers([], []),
         test_loader_name="tempest")
+
+    client_cert = _resolve_environ(d.get('ssl_client_cert', ''))
+    client_key = _resolve_environ(d.get('ssl_client_key', ''))
+    if client_cert and client_key:
+        for test in test_suite:
+            test.http.client = httpx.Client(
+                verify=cert_validate,
+                cert=(client_cert, client_key),
+            )
 
     # NOTE(sileht): We hide stdout/stderr and reraise the failure
     # manually, tempest will print it ittest_class.
